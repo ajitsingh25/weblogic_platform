@@ -1,0 +1,73 @@
+#!/bin/sh
+
+################ DEFINE VARIABLES HERE ####################
+PLATFORM_HOME="@@CONFIG_HOME@@"
+WARNING="@@WARNING_THRESHOLD@@"
+CRIT="@@CRIT_THRESHOLD@@"
+mailto="@@ALERT_MAIL@@"
+SCRIPT_HOME=$PLATFORM_HOME/core/commands/ant/resources/monitoring
+HOSTNAME=$(hostname)
+TEMPFILE="$(mktemp)"
+COLUMNS=124
+#########Dumy Var####
+#WARNING=30
+#CRIT=40
+#mailto="ajitsingh25@localcorp.com"
+
+#cpuhistory=$SCRIPT_HOME/cpuhistory
+cpuhistory=/tmp/cpuhistory
+if [ ! -d $cpuhistory ]; then
+        mkdir -p $cpuhistory
+fi
+
+LOGFILE=$cpuhistory/hist-`date +%h%d%y`.log
+touch $LOGFILE
+
+
+# Mail message body
+CPU_LOAD=`top -b -n 2 -d1 | grep "Cpu(s)" | tail -n1 | awk '{print $2}' |awk -F. '{print $1}'`
+echo "<html><body style=\"background-color:AliceBlue;\"><pre>"                                                >> $TEMPFILE
+echo "<b><h3 style=\"color:red;\">CPU Load is $CPU_LOAD% on $HOSTNAME</h3></b>"  >> $TEMPFILE
+echo " " >> $TEMPFILE
+
+echo "#########################################################################"                >> $TEMPFILE
+echo -e "\t<b>Current CPU Snapshot</b>\t" >> $TEMPFILE
+echo "#########################################################################"                >> $TEMPFILE
+top -b -n 2 -d1 | grep -m 2 -A 20 'Cpu(s)' -B 2| tail -n 23                                     >> $TEMPFILE
+echo " " >> $TEMPFILE
+
+echo "#########################################################################"           >> $TEMPFILE
+echo -e "\t<b>CPU utilization: 2 seconds apart, 5 times</b>\t"  >> $TEMPFILE
+echo "#########################################################################"           >> $TEMPFILE
+sar -u 2 5| grep -v Linux >> $TEMPFILE
+echo " " >> $TEMPFILE
+
+echo "#########################################################################"           >> $TEMPFILE
+echo -e "\t<b>List of processes based on the CPU Usage</b>\t"   >> $TEMPFILE
+echo "#########################################################################"           >> $TEMPFILE
+ps -eo pcpu,pid,user,args | sort -k 1 -r |pr -TW$COLUMNS| head -10      >> $TEMPFILE
+echo " " >> $TEMPFILE
+
+echo "#########################################################################"           >> $TEMPFILE
+echo -e "\t<b>List of processes based on the memory Usage</b>\t"        >> $TEMPFILE
+echo "#########################################################################"           >> $TEMPFILE
+ps aux --sort -rss | head |pr -TW$COLUMNS >> $TEMPFILE
+
+echo " " >> $TEMPFILE
+echo "</pre></body></html>" >> $TEMPFILE
+
+#CPU_LOAD=`top -b -n 2 -d1 | grep "Cpu(s)" | tail -n1 | awk '{print $2}' |awk -F. '{print $1}'`
+if [ -n "$WARNING" -a -n "$CRIT" ]; then
+        if [ "$CPU_LOAD" -ge "$WARNING" -a "$CPU_LOAD" -lt "$CRIT" ]; then
+                echo " `date "+%F %H:%M:%S"` WARNINGING - $CPU_LOAD on Host $HOSTNAME" >> $LOGFILE
+                mail -s "$(echo -e "CPU Load is Warning $CPU_LOAD% on $HOSTNAME\nContent-Type: text/html")" $mailto < $TEMPFILE
+                exit 1
+        elif [ "$CPU_LOAD" -ge "$CRIT" ]; then
+                echo "`date "+%F %H:%M:%S"` CRITICAL - $CPU_LOAD on $HOSTNAME" >> $LOGFILE
+                mail -s "$(echo -e "CPU Load is CRITICAL $CPU_LOAD% on $HOSTNAME\nContent-Type: text/html")" $mailto < $TEMPFILE
+                exit 2
+        else
+                echo "`date "+%F %H:%M:%S"` OK - $CPU_LOAD on $HOSTNAME" >> $LOGFILE
+                exit 0
+        fi
+fi

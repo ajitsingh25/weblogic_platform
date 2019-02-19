@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="WebLogic Installation">
+	<import file="ant-imports.xml"/>
+    	<target name="install_weblogic" depends="populate.silent.xml,populate.oraInst.xml" description="Install WebLogic">
+		<echo message="Installing WebLogic with the following settings:"/>
+		<echo message="================================================"/>
+		<echo message="BEA/Oracle Home: ${wls.oracle.home}" />
+		<echo message="WebLogic Home: ${wls.oracle.home}/${wls.name}" />
+		<echo message="Java Home: ${wls.domain.javahome}" />
+		<echo message="================================================"/>
+		<echo message="Please be patient the silent installer may take several minutes to run."/>
+                			
+	<property name="wls.script" value="installWLS.sh" />
+	<exec executable="/bin/sh" failonerror="true">
+                <arg line="${wls.script}"/>
+                <arg line="${wls.install.binaryHome}"/>
+                <arg line="${ConfigNOW.home}"/>
+                <arg line="${wls.oracle.top}"/>
+                <arg line="${wls.oracle.home}"/>
+<!--                <arg line="${wls.install.file}"/> -->
+		<arg line="${wls.domain.javahome}"/>
+		<arg line="${silent.xml}"/>
+		<arg line="${oraInst.xml}"/>
+		<arg line="${wls.oracle.inventory}"/>
+		<arg line="${wls.version}"/>
+		<arg line="${wls.install.user}"/>
+        </exec>
+
+       	<delete file="${silent.xml}"/>
+		<delete file="${oraInst.xml}"/>
+		<copy file="resources/login_WebLogic_branding.png" tofile="${wls.oracle.home}/${wls.name}/server/lib/consoleapp/webapp/framework/skins/wlsconsole/images/login_WebLogic_branding.png" overwrite="true" />
+		<copy file="resources/login-12c.png" tofile="${wls.oracle.home}/${wls.name}/server/lib/consoleapp/webapp/framework/skins/wlsconsole/images/login-12c.png" overwrite="true" />
+		<copy file="resources/OracleLogo.png" tofile="${wls.oracle.home}/${wls.name}/server/lib/consoleapp/webapp/framework/skins/wlsconsole/images/OracleLogo.png" overwrite="true" />
+		<if>
+			<available file="${wls.oracle.home}/${wls.name}/common/derby/lib/derby.jar"/>
+			<then>
+				<echo message="Disabling WLS Derby"/>
+				<move file="${wls.oracle.home}/${wls.name}/common/derby/lib/derby.jar" tofile="${wls.oracle.home}/${wls.name}/common/derby/lib/derby.moved"/>
+			</then>
+			<else>
+				<echo message="WLS Derby Already Disabled"/>
+			</else>
+		</if>
+		<echo message="================================================"/>
+		<echo message="================================================"/>
+		<echo message="WebLogic Install Finished"/>
+		<echo message="================================================"/>
+		<echo message="================================================"/>
+    	</target>
+
+	<target name="populate.silent.xml">
+        	<condition property="silent.props.exist">
+            	<and>
+              		<isset property="wls.oracle.home"/>
+              		<isset property="wls.name"/>
+            	</and>
+        	</condition>
+        	<mkdir dir="tmp" />
+        	<!-- Weblogic 12c changes ... Need to verify version here ... TODO -->
+        
+	    	<property name="silent.xml" value="${ConfigNOW.home}/core/commands/ant/tmp/silent_weblogic.txt" />
+	    	<fail unless="silent.props.exist">Could not populate silent_weblogic.xml file - wls.oracle.home and wls.name properties must be set.</fail>
+		<copy file="resources/silent_weblogic_12c.txt" tofile="${silent.xml}" overwrite="true" />
+		<echo message="before replacing"/>
+	    	<replace file="${silent.xml}">
+        		<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+			<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+        	</replace>
+    	</target>
+
+    	<target name="populate.oraInst.xml">
+        	<condition property="oraInst.props.exist">
+            	<and>
+              		<isset property="wls.oracle.inventory"/>
+              		<isset property="wls.install.group"/>
+            	</and>
+        	</condition>
+            	<property name="oraInst.xml" value="${ConfigNOW.home}/core/commands/ant/tmp/oraInst.txt" />
+            	<fail unless="oraInst.props.exist">Could not populate oraInst.txt file - wls.oracle.inventory and wls.install.group properties must be set.</fail>
+                <copy file="resources/oraInst.loc" tofile="${oraInst.xml}" overwrite="true" />
+                <echo message="before replacing"/>
+            	<replace file="${oraInst.xml}">
+        		<replacefilter token="@@OUI_INVENTORY_DIRECTORY@@" value="${wls.oracle.inventory}"/>
+			<replacefilter token="@@OUI_INSTALL_GROUP@@" value="${wls.install.group}"/>
+            	</replace>
+    	</target>
+
+</project>

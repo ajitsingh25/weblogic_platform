@@ -1,0 +1,232 @@
+#!/bin/bash
+
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+USER="@@OS_USER@@"
+ASERVER_HOME="@@ASERVER_HOME@@"
+MSERVER_HOME="@@MSERVER_HOME@@"
+WLS_VERSION="@@WLS_VERSION@@"
+DOMAIN="@@DOMAIN_NAME@@"
+NM_HOME="@@NM_HOME@@"
+ADMIN_HOST="@@ADMIN_HOST@@"
+OLD_HOST="@@OLD_MS_HOST@@"
+OLD_IP="@@OLD_MS_IP@@"
+NEW_HOST="@@NEW_MS_HOST@@"
+PEGA_TOP="@@PEGA_TOP@@"
+
+if [ "$WLS_VERSION" == "wls12130" ]; then
+	DOMAIN_HOME=$ASERVER_HOME
+else
+	DOMAIN_HOME=$MSERVER_HOME
+fi
+#GET LOCAL DIRECTORY PATH AND REMOTE DIRECTORY PATH
+LOCAL_PATH="$PLATFORM_HOME/custom/resources/recovery"
+REMOTE_PATH="$PLATFORM_HOME/custom/resources"
+
+# Create environment virables
+installbase=$(pwd)
+ADMIN_SHORT=`echo $ADMIN_HOST | cut -d'.' -f 1`
+ADMIN_UPPER=`echo $ADMIN_SHORT | awk '{print toupper($0)}'`
+ADMIN_IP=`nslookup $ADMIN_HOST | tail -2 | cut -d' ' -f 2 | head -1`
+OLD_SHORT=`echo $OLD_HOST | cut -d'.' -f 1`
+OLD_UPPER=`echo $OLD_SHORT | awk '{print toupper($0)}'`
+NEW_SHORT=`echo $NEW_HOST | cut -d'.' -f 1`
+NEW_UPPER=`echo $NEW_SHORT | awk '{print toupper($0)}'`
+NEW_IP=`nslookup $NEW_HOST | tail -2 | cut -d' ' -f 2 | head -1`
+
+
+
+function test_ssh_connection(){
+	echo "Testing connection to ${NEW_SHORT}..."
+	ssh -n -o NumberOfPasswordPrompts=0 ${USER}@${NEW_SHORT}
+	if [ "$?" -ne "0" ]; then
+	  echo "FATAL: You do not have passwordless ssh working."
+	  echo "Try running ssh-add."
+	  exit 1
+	fi
+}
+
+# check if run by website
+function check_user(){
+	if [[ $USER -ne "$USER" ]]
+	then
+		echo "Not running by $USER"
+		exit
+	fi
+}
+
+function check_remote_dir() {
+	echo -e "\ntesting remote directory: $REMOTE_PATH "
+
+	if ssh $USER@$NEW_SHORT "[ ! -d $REMOTE_PATH ]"; then
+			printf "\nCreating: $REMOTE_PATH on $USER@$NEW_SHORT\n"
+			ssh $USER@$NEW_SHORT "mkdir -p $REMOTE_PATH"
+	else
+			printf "[OK]\n"
+	fi
+}
+
+# new function to get last several digits
+function getNUM() {
+	# If ends with digits, then return those digits
+        if [[ $1 =~ .*[0-9]+$ ]];then
+                DIGITS=`echo $1 | egrep -o '[0-9]{1,}$'`
+	# If not ends with digits
+        else
+                CHECKBIT=`echo $1 | egrep -o '.{3}$' | head -c 1`
+                re='^[0-9]+$'
+		# If the third last digit is not number, then return the last two characters
+                if ! [[ $CHECKBIT =~ $re ]] ; then
+                        DIGITS=`echo $1 | egrep -o '.{2}$'`
+		# if the third last digit is number, then return the last three characters
+                else
+                        DIGITS=`echo $1 | egrep -o '.{3}$'`
+                fi
+        fi
+	echo $DIGITS
+}
+
+
+# Configuration on admin host
+function adminConfig(){
+	OLD_NUM=`getNUM $OLD_SHORT`
+	NEW_NUM=`getNUM $NEW_SHORT`
+	ADMIN_NUM=`getNUM $ADMIN_SHORT`
+
+	# Shutdown adminserver
+	echo "shutdown adminserver"
+	pid_count=`ps -ef | grep "$DOMAIN" | grep -v grep | wc -l`
+	if [ "$pid_count" == 1 ]; then
+		$DOMAIN_HOME/${DOMAIN}/bin/stopWebLogic.sh
+	else
+		echo "$DOMAIN_NAME already shutdown.."
+	fi
+
+	echo "config on admin host"
+	cd $DOMAIN_HOME/${DOMAIN}/config
+	sed -i "s/_${OLD_NUM}_/_${NEW_NUM}_/g" config.xml
+	sed -i "s/${OLD_SHORT}/${NEW_SHORT}/g" config.xml
+	sed -i "s/${OLD_IP}/${NEW_IP}/g" config.xml
+	sed -i "s/${OLD_UPPER}/${NEW_UPPER}/g" config.xml
+	cd jms
+	#sed -i "s/_${OLD_NUM}_/_${NEW_NUM}_/g" prjms_module_${APP}_l2-jms.xml prjms_module_${APP}_l1-jms.xml
+	sed -i "s/_${OLD_NUM}_/_${NEW_NUM}_/g" *.xml
+
+	if [ -f $DOMAIN_HOME/${DOMAIN}/servers/domain_bak/config_prev/config.xml ]; then
+		cd $DOMAIN_HOME/${DOMAIN}/servers/domain_bak/config_prev
+		sed -i "s/_${OLD_NUM}_/_${NEW_NUM}_/g" config.xml
+		sed -i "s/${OLD_SHORT}/${NEW_SHORT}/g" config.xml
+		sed -i "s/${OLD_IP}/${NEW_IP}/g" config.xml
+		sed -i "s/${OLD_UPPER}/${NEW_UPPER}/g" config.xml
+	fi
+
+	cd $DOMAIN_HOME/${DOMAIN}
+	if [ -f startManagedWebLogic_readme.txt ]; then
+			sed -i "s/${OLD_SHORT}/${NEW_SHORT}/g" startManagedWebLogic_readme.txt
+	fi
+	cd bin
+	if [ -f hostlist1.txt ];then
+			sed -i "s/${OLD_SHORT}/${NEW_SHORT}/g" hostlist1.txt
+	fi
+	cd $DOMAIN_HOME/${DOMAIN}/servers/adminserver_${APP}/
+	rm -rf logs data tmp cache
+	echo "config finshed on admin host"
+}
+
+
+# tar the DOMAIN directory
+function domainTar(){
+	cd $DOMAIN_HOME
+	echo "tar the $DOMAIN folder..."
+	if [ -f $DOMAIN.tar ]; then
+		rm $DOMAIN.tar
+	fi
+	tar -czvf $DOMAIN.tar $DOMAIN --exclude=$DOMAIN/servers* --exclude=$DOMAIN/tmp --exclude=$DOMAIN/*.tar --exclude=$DOMAIN/core.* --exclude=$DOMAIN/*.hprof --exclude=$DOMAIN/config/config_bootstrap.xml
+#	tar czf $DOMAIN.tar $DOMAIN
+	mv $DOMAIN.tar $LOCAL_PATH
+}
+
+function nmTar(){
+	cd $NM_HOME/..
+	echo "tar the nodemanager folder..."
+	if [ -f nodemanager.tar ]; then
+		rm nodemanager.tar
+	fi
+	tar czf nodemanager.tar nodemanager
+	mv nodemanager.tar $LOCAL_PATH
+}
+
+
+# tar the prconfig files
+function tarConfigFiles(){
+	echo "tar and copy the pegaconfig folders..."
+	cd $PEGA_TOP/${DOMAIN}/${DOMAIN}config/
+	cd $(ls -d */|head -n 1)
+	CURRENT_JVM=`basename $(pwd)`
+	if [ -f prlogging.xml ];then
+		sed -i "s/${CURRENT_JVM}/managedserver/g" prlogging.xml
+	fi
+	if [ -f logging.properties ];then
+		sed -i "s/${CURRENT_JVM}/managedserver/g" logging.properties
+	fi
+	if [ -f log4j2.properties ];then
+		sed -i "s/${CURRENT_JVM}/managedserver/g" log4j2.properties
+	fi
+	tar czf prconfig.tar $(ls log4j2.properties log4j.properties.before.sif log4j.properties logging.properties prconfig.xml prlogging.xml prmbeans.properties 2>/dev/null)
+	mv prconfig.tar $LOCAL_PATH
+	
+	# change back on admin stage
+	if [ -f prlogging.xml ];then
+		sed -i "s/managedserver/${CURRENT_JVM}/g" prlogging.xml
+	fi
+	if [ -f logging.properties ];then
+		sed -i "s/managedserver/${CURRENT_JVM}/g" logging.properties
+	fi
+	if [ -f log4j2.properties ];then
+		sed -i "s/managedserver/${CURRENT_JVM}/g" log4j2.properties
+	fi
+
+}
+
+function scp_to_remote(){
+	scp -r $LOCAL_PATH $USER@$NEW_SHORT:$REMOTE_PATH
+	if [ "$?" -ne "0" ]; then
+	  echo "An error occurred."
+	else
+	  echo "Successfully copied $REMOTE_PATH to $NEW_SHORT"
+	fi
+}
+
+function execute_remote_recovery_scripts(){
+	 ssh $USER@$NEW_SHORT "$LOCAL_PATH/recovery.sh"
+}
+
+# Start adminserver
+function start_adminserver(){
+	#echo "Restart Adminserver $DOMAIN"
+	cd $DOMAIN_HOME/${DOMAIN}/bin
+	pid_count=`ps -ef | grep "$DOMAIN_NAME" | grep -v grep | wc -l`
+	if [ "$pid_count" == 1 ]; then
+		echo "Restarting $DOMAIN.."
+		$DOMAIN_HOME/${DOMAIN}/bin/stopWebLogic.sh
+		$DOMAIN_HOME/${DOMAIN}/bin/startadmin.sh
+	else
+		echo "Starting $DOMAIN.."
+		$DOMAIN_HOME/${DOMAIN}/bin/startadmin.sh
+	fi
+	echo "recovery script finished"
+}
+
+
+test_ssh_connection
+check_user
+check_remote_dir
+adminConfig
+domainTar
+nmTar
+if [ "$DOMAIN" != "okm" -a "$DOMAIN" != "gems" ]; then
+	tarConfigFiles
+fi
+scp_to_remote
+execute_remote_recovery_scripts
+#start_adminserver

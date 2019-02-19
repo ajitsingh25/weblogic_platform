@@ -1,0 +1,87 @@
+#!/bin/sh
+#
+############# DEFINE VARIABLES HERE ###############
+PLATFORM_HOME="@@CONFIG_HOME@@"
+PC_LIMIT="@@WARNING_THRESHOLD@@"
+mailto="@@ALERT_MAIL@@"
+SCRIPT_HOME=$PLATFORM_HOME/core/commands/ant/resources/monitoring
+THISHOST=$(hostname) 
+TEMPFILE="$(mktemp)" 
+
+#Calculate number of Processor
+MAXLOAD=`grep pro /proc/cpuinfo -c`
+#MAXLOAD=2
+
+# Extract the integer and decimal parts of $MAXLOAD value
+MAXLOAD_INT=$(echo $MAXLOAD | awk -F '.' '{print $1}')
+MAXLOAD_DEC=$(echo $MAXLOAD | awk -F '.' '{print $2}')
+
+L1=l
+L2=5
+L3=15
+
+# DEFINE FUNCTIONS HERE
+
+function get_max
+{
+	# This function returns the number of arguments presented to the function
+
+	(($# == 0)) && return -1
+	echo $#
+}
+
+# BEGINNING OF MAIN
+
+#echo -e "\nGathering System Load Average using the \"uptime\" command\n"
+
+# This next command statement extracts the latest load statistics.
+
+NUM_ARGS=$(get_max $(uptime)) # Get the total number of fields in uptime output
+
+((NUM_ARGS == -1)) && echo "ERROR: get_max Function Error… EXITING…"\
+                   && exit 2
+
+# Find the exact fields that represent the run queue load state
+
+ARGM2=$(((NUM_ARGS - 2))) # Subtract 2 from the total
+ARGM1=$(((NUM_ARGS - 1))) # Subtract 1 from the total
+ARGM=$NUM_ARGS            # Last value in string
+
+# Extract the run queue data in the last 3 fields of uptime output
+echo "<html><body><pre>"                                               	 							>> $TEMPFILE
+
+uptime | sed s/,//g | awk '{print $'$ARGM2', $'$ARGM1', $'$ARGM'}' \
+       | while read LAST5 LAST10 LAST15
+do
+
+    echo $LAST5 | awk -F '.' '{print $1, $2}' | while read INT DEC
+      do
+		echo "#########################################################################"           		>> $TEMPFILE
+		echo -e "<b>CPU Load Average Report for $THISHOST</b>"											>> $TEMPFILE
+		date																							>> $TEMPFILE
+		echo "#########################################################################"           		>> $TEMPFILE
+		echo " " 																 						>> $TEMPFILE
+		echo  -e "System load average for the last $L1 minutes is\t <b>$LAST5</b>"						>> $TEMPFILE
+		echo  -e "System load average for the last $L2 minutes is\t <b>$LAST10</b>"						>> $TEMPFILE
+		echo  -e "System load average for the last $L3 minutes is\t <b>$LAST15</b>"						>> $TEMPFILE
+		echo  -e "\nThe load threshold is\t <b>${MAXLOAD}</b>\n"										>> $TEMPFILE
+		echo " " 																 						>> $TEMPFILE
+		echo "</pre></body></html>" 																	>> $TEMPFILE
+         # Test if the load is above the trigger threshold
+      if (( INT > MAXLOAD_INT ))
+      then
+		 mail -s "$(echo -e "WARNING: System load has reached ${LAST5} on $THISHOST\nContent-Type: text/html")" $mailto < $TEMPFILE
+         #echo -e "\nWARNING: System load has reached ${LAST5}\n"									>> $TEMPFILE
+      elif (( INT == MAXLOAD_INT ))
+      then
+         # Since the integer values are at threshold we need to check the decimal values
+
+           if (( DEC >= MAXLOAD_DEC ))
+           then
+			mail -s "$(echo -e "WARNING: System load has reached ${LAST5} on $THISHOST\nContent-Type: text/html")" $mailto < $TEMPFILE
+			#mail -s "$(echo -e "WARNING: Paging Space has Exceeded the ${PC_LIMIT}% Upper Limit! on $THISHOST\nContent-Type: text/html")" $mailto < $TEMPFILE
+           fi
+     fi
+
+    done
+done

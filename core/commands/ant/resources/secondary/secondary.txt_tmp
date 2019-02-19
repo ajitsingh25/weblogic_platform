@@ -1,0 +1,60 @@
+#!/bin/sh
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+SCRIPT_HOME="$PLATFORM_HOME/custom/resources/secondary"
+
+SCRIPT_PRECHECK="$SCRIPT_HOME/preCheck.sh"
+SCRIPT_JDK="$SCRIPT_HOME/install_jdk.sh"
+SCRIPT_WLS="$SCRIPT_HOME/install_WLS.sh"
+SCRIPT_PATCH="$SCRIPT_HOME/applyPatch.sh"
+SCRIPT_UNPACK="$SCRIPT_HOME/wlsUnpack.sh"
+SCRIPT_NM="$SCRIPT_HOME/MS_Update_Nodemanager.sh"
+SCRIPT_MONITORING="$SCRIPT_HOME/setupCron.sh"
+
+chmod +x $SCRIPT_HOME/*.sh
+
+#System Pre Check
+#sh $SCRIPT_PRECHECK
+
+#Install JDK
+sh $SCRIPT_JDK
+if [ "$?" -ne "0" ]; then
+	echo "JDK Installation Failed, please run installation script Manually. Aborting .."
+	exit 
+fi
+
+#Install WLS
+sh $SCRIPT_WLS
+if [ "$?" -ne "0" ]; then
+	echo "WLS Installation Failed, please run installation script Manually. Aborting .."
+	exit 
+fi
+
+#Apply Patch
+sh $SCRIPT_PATCH
+if [ "$?" -ne "0" ]; then
+	echo "WLS Patching Failed, please run patching script Manually. Aborting .."
+	exit 
+fi
+
+#Domain Unpack
+sh $SCRIPT_UNPACK
+if [ "$?" -ne "0" ]; then
+	echo "WLS domain unpack Failed, please run unpack script Manually. Aborting .."
+	exit 
+fi
+
+#Configure Node Manager
+sh $SCRIPT_NM
+if [ "$?" -ne "0" ]; then
+	echo "WLS NodeManager configuration Failed, please run node manager script Manually. Aborting .."
+	exit 
+fi
+
+#Configure Host Monitoring Scripts
+sh $SCRIPT_MONITORING
+if [ "$?" -ne "0" ]; then
+	echo "Host Monitoring script configuration failed, please run the script Manually. Aborting .."
+	exit 
+fi
+

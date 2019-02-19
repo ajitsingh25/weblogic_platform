@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<project name="Ant Imports" basedir=".">
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="../../engine/lib/ant-contrib-1.0b1.jar" />
+        </classpath>
+    </taskdef>
+</project>

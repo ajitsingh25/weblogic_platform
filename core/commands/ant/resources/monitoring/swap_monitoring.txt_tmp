@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+################ DEFINE VARIABLES HERE ####################
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+PC_LIMIT="@@WARNING_THRESHOLD@@"
+mailto="@@ALERT_MAIL@@"
+SCRIPT_HOME=$PLATFORM_HOME/core/commands/ant/resources/monitoring
+THISHOST=$(hostname)   				        				
+TEMPFILE="$(mktemp)"   
+              
+############# CAPTURE AND PROCESS THE DATA ################
+
+free -m | grep -i swap | while read junk SW_TOTAL SW_USED SW_FREE
+do
+	PERCENT_USED=$(bc <<EOF
+scale=4
+($SW_USED / $SW_TOTAL) * 100
+EOF
+)
+
+	PERCENT_FREE=$(bc <<EOF
+scale=4
+($SW_FREE / $SW_TOTAL) * 100
+EOF
+)
+
+	# Mail message body
+	# Produce the rest of the paging space report:
+	echo "<html><body style=\"background-color:AliceBlue;\"><pre>"         	 						>> $TEMPFILE
+	echo -e "<b><u><h3 style=\"color:red;\">WARNING: Paging Space has Exceeded the ${PC_LIMIT}% Upper Limit!</h3></u></b>"		>> $TEMPFILE
+	echo "#########################################################################"           		>> $TEMPFILE
+	echo -e "<b>Swap Space Report for $THISHOST</b>"												>> $TEMPFILE
+	date																							>> $TEMPFILE
+	echo "#########################################################################"           		>> $TEMPFILE
+	echo -e "\n<b>Total Amount of Swap Space:</b>\t${SW_TOTAL}MB"			 						>> $TEMPFILE
+	echo -e "<b>Total KB of Swap Space Used:</b>\t${SW_USED}MB"				 						>> $TEMPFILE
+	echo -e "<b>Total KB of Swap Space Free:</b>\t${SW_FREE}MB"				 						>> $TEMPFILE
+	echo -e "\n<b>Percent of Swap Space Used:</b>\t${PERCENT_USED}%"		 						>> $TEMPFILE
+	echo -e "<b>Percent of Swap Space Free:</b>\t${PERCENT_FREE}%"		 							>> $TEMPFILE
+	echo " " 																 						>> $TEMPFILE
+	echo "</pre></body></html>" 																	>> $TEMPFILE
+
+	# Grab the integer portion of the percent used to
+	# test for the over limit threshold
+
+	INT_PERCENT_USED=$(echo $PERCENT_USED | cut -d. -f1)
+
+	if (( PC_LIMIT <= INT_PERCENT_USED ))
+	then
+		# Swap space limit has exceeded the threshold, send notification
+		#echo -e "\n\nWARNING: Paging Space has Exceeded the ${PC_LIMIT}% Upper Limit!\n"
+		mail -s "$(echo -e "WARNING: Paging Space has Exceeded the ${PC_LIMIT}% Upper Limit! on $THISHOST\nContent-Type: text/html")" $mailto < $TEMPFILE
+	fi
+
+done
+

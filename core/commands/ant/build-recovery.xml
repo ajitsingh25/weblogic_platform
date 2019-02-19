@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Generate-recovery-Dynamic-Scripts">
+    <import file="ant-imports.xml"/>
+
+	<target name="recovery" depends="populate.setupCron.sh.recovery,populate.install_WLS.sh.recovery,populate.install_jdk.sh.recovery,populate.applyPatch.sh.recovery,copy.monitoring.recovery,populate.preCheck.sh.recovery,populate.recovery.sh,populate.execute_recovery.sh">
+		<echo message="SuccessFully Created scripts for secondary hosts.."/>
+	</target>
+	
+	<target name="admin_recovery" depends="populate.setupCron.sh.recovery,populate.install_WLS.sh.recovery,populate.install_jdk.sh.recovery,populate.applyPatch.sh.recovery,copy.monitoring.recovery,populate.preCheck.sh.recovery,populate.admin.recovery.sh,populate.admin.execute_recovery.sh">
+		<echo message="SuccessFully Created scripts for admin server hosts recovery.."/>
+	</target>
+	
+	<target name="populate.applyPatch.sh.recovery">
+			<condition property="applyPatch.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+					<isset property="opatch.patchZipName"/>
+					<isset property="wls.oracle.home"/>
+					<isset property="wls.domain.javahome"/>
+					<isset property="opatch.quarter"/>
+					<isset property="opatch.patchesdir"/>
+			</and>
+			</condition>
+			
+			<property name="applyPatch.sh" value="${ConfigNOW.home}/custom/resources/recovery/applyPatch.sh" />
+			<fail unless="applyPatch.script">Could not populate "applyPatch.sh" file - opatch.patchZipName, wls.oracle.home, wls.domain.javahome, opatch.quarter and opatch.patchesdir property must be set.</fail>
+			<copy file="resources/recovery/applyPatch.txt_tmp" tofile="${applyPatch.sh}" overwrite="true" />
+			<copy file="${ConfigNOW.home}/../${opatch.patchesdir}/${opatch.quarter}/${opatch.patchZipName}" todir="${ConfigNOW.home}/custom/resources/recovery" overwrite="true" />
+			<echo message="creating applyPatch.sh script.."/>
+			<replace file="${applyPatch.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@PATCH_ZIP@@" value="${opatch.patchZipName}"/>
+					<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+					<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+					<replacefilter token="@@PATCH_QUATER@@" value="${opatch.quarter}"/>
+					<replacefilter token="@@PATCH_SHARED_DIR@@" value="${opatch.patchesdir}"/>
+			</replace>
+			<chmod file="${applyPatch.sh}" perm="750"/>
+	</target>
+	<target name="populate.install_jdk.sh.recovery">
+			<condition property="install_jdk.script">
+			<and>
+					<isset property="wls.install.binaryHome"/>
+					<isset property="wls.install.umask"/>
+					<isset property="wls.domain.javaVersion"/>
+					<isset property="wls.oracle.top"/>
+					<isset property="wls.oracle.home"/>
+					<isset property="wls.install.user"/>
+			</and>
+			</condition>
+			
+			<property name="install_jdk.sh" value="${ConfigNOW.home}/custom/resources/recovery/install_jdk.sh" />
+			<fail unless="install_jdk.script">Could not populate "install_jdk.sh" file - wls.install.binaryHome, wls.install.umask, wls.domain.javaVersion, wls.oracle.top and wls.oracle.home property must be set.</fail>
+			<copy file="resources/recovery/install_jdk.txt_tmp" tofile="${install_jdk.sh}" overwrite="true" />
+			<copy todir="${ConfigNOW.home}/custom/resources/recovery"  verbose="yes" overwrite="true">
+				<fileset dir="${ConfigNOW.home}/../${wls.install.binaryHome}/">
+					<include name="**/*.tar.gz"/>
+				</fileset>
+			</copy>
+			<echo message="creating install_jdk.sh script.."/>
+			<replace file="${install_jdk.sh}">
+					<replacefilter token="@@BINARY_HOME@@" value="${wls.install.binaryHome}"/>
+					<replacefilter token="@@UMASK@@" value="${wls.install.umask}"/>
+					<replacefilter token="@@JDK_VERSION@@" value="${wls.domain.javaVersion}"/>
+					<replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+					<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+					<replacefilter token="@@USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@JAVA_INSTALL_HOME@@" value="${wls.domain.javainstall.home}"/>
+					<replacefilter token="@@WL_VERSION@@" value="${wls.version}"/>
+			</replace>
+			<chmod file="${install_jdk.sh}" perm="750"/>
+	</target>
+	<target name="populate.install_WLS.sh.recovery" depends="populate.silent.xml,populate.oraInst.xml">
+			<condition property="install_WLS.script">
+			<and>
+				<isset property="wls.install.binaryHome"/>
+				<isset property="ConfigNOW.home"/>
+				<isset property="wls.oracle.top"/>
+				<isset property="wls.oracle.home"/>
+				<isset property="wls.domain.javahome"/>
+				<isset property="silent.xml"/>
+				<isset property="oraInst.xml"/>
+				<isset property="wls.oracle.inventory"/>
+			</and>
+			</condition>
+			
+			<property name="install_WLS.sh" value="${ConfigNOW.home}/custom/resources/recovery/install_WLS.sh" />
+			<fail unless="install_WLS.script">Could not populate "install_WLS.sh" file - wls.install.binaryHome, wls.oracle.top, wls.oracle.home, wls.domain.javahome and wls.oracle.inventory property must be set.</fail>
+			<copy file="resources/recovery/install_WLS.txt_tmp" tofile="${install_WLS.sh}" overwrite="true" />
+			<copy todir="${ConfigNOW.home}/custom/resources/recovery"  verbose="yes" overwrite="true">
+				<fileset dir="${ConfigNOW.home}/../${wls.install.binaryHome}/">
+					<include name="**/*.jar"/>
+				</fileset>
+			</copy>
+			<echo message="creating install_WLS.sh script.."/>
+			<replace file="${install_WLS.sh}">
+					<replacefilter token="@@BINARY_HOME@@" value="${wls.install.binaryHome}"/>
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+					<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+					<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+					<replacefilter token="@@WLS_RSP_FILE@@" value="${silent.xml}"/>
+					<replacefilter token="@@ORA_INV_FILE@@" value="${oraInst.xml}"/>
+					<replacefilter token="@@ORA_INV_DIR@@" value="${wls.oracle.inventory}"/>
+					<replacefilter token="@@WL_VERSION@@" value="${wls.version}"/>
+			</replace>
+			<chmod file="${install_WLS.sh}" perm="750"/>
+	</target>
+	<target name="populate.silent.xml">
+		<condition property="silent.props.exist">
+			<and>
+				<isset property="wls.oracle.home"/>
+				<isset property="wls.name"/>
+			</and>
+		</condition>
+	
+		<property name="silent.xml" value="${ConfigNOW.home}/custom/resources/recovery/silent_weblogic.txt" />
+		<fail unless="silent.props.exist">Could not populate silent_weblogic.xml file - wls.oracle.home and wls.name properties must be set.</fail>
+		<copy file="resources/silent_weblogic_12c.txt" tofile="${silent.xml}" overwrite="true" />
+		<echo message="before replacing"/>
+		<replace file="${silent.xml}">
+			<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+			<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+		</replace>
+		<echo message="replacement done.."/>
+	</target>
+	<target name="populate.oraInst.xml">
+		<condition property="oraInst.props.exist">
+			<and>
+				<isset property="wls.oracle.inventory"/>
+				<isset property="wls.install.group"/>
+			</and>
+		</condition>
+			<property name="oraInst.xml" value="${ConfigNOW.home}/custom/resources/recovery/oraInst.txt" />
+			<fail unless="oraInst.props.exist">Could not populate oraInst.txt file - wls.oracle.inventory and wls.install.group properties must be set.</fail>
+			<copy file="resources/oraInst.loc" tofile="${oraInst.xml}" overwrite="true" />
+			<echo message="before replacing"/>
+			<replace file="${oraInst.xml}">
+				<replacefilter token="@@OUI_INVENTORY_DIRECTORY@@" value="${wls.oracle.inventory}"/>
+				<replacefilter token="@@OUI_INSTALL_GROUP@@" value="${wls.install.group}"/>
+			</replace>
+			<echo message="replacement done.."/>
+    </target>
+	<target name="copy.monitoring.recovery">
+		<copy todir="${ConfigNOW.home}/custom/resources/recovery" overwrite="true">
+			<fileset dir="${ConfigNOW.home}/custom/resources/">
+				<include name="monitoring/**" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.domain_templete.recovery">
+		<!--copy file="resources/tmp/wlsUnpack.sh" tofile="${ConfigNOW.home}/custom/resources/secondary" overwrite="true" /-->
+		<copy todir="${ConfigNOW.home}/custom/resources/recovery" verbose="yes" overwrite="true">
+			<fileset dir="resources/tmp/">
+				<include name="**/wlsUnpack.sh" />
+			</fileset>
+			<fileset dir="${ConfigNOW.home}/custom/resources/templates">
+				<include name="**/${wls.domain.name}.jar" />
+			</fileset>		
+		</copy>
+	</target>
+	<target name="populate.setupCron.sh.recovery">
+			<condition property="setupCron.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="setupCron.sh" value="${ConfigNOW.home}/custom/resources/recovery/setupCron.sh" />
+			<fail unless="setupCron.script">Could not populate "setupCron.sh" file - ConfigNOW.home property must be set.</fail>
+			<copy file="resources/recovery/setupCron.txt_tmp" tofile="${setupCron.sh}" overwrite="true" />
+			<echo message="creating setupCron.sh script.."/>
+			<replace file="${setupCron.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+			</replace>
+			<chmod file="${setupCron.sh}" perm="750"/>
+	</target>
+	<target name="populate.preCheck.sh.recovery">
+			<condition property="preCheck.script">
+			<and>
+					<isset property="wls.install.group"/>
+					<isset property="wls.install.user"/>
+					<isset property="wls.oracle.top"/>
+					<isset property="wls.install.umask"/>
+			</and>
+			</condition>
+			
+			<property name="preCheck.sh" value="${ConfigNOW.home}/custom/resources/recovery/preCheck.sh" />
+			<fail unless="preCheck.script">Could not populate "preCheck.sh" file - wls.install.group,wls.install.user and wls.oracle.top properties must be set.</fail>
+			<copy file="resources/preCheck_tmp.sh" tofile="${preCheck.sh}" overwrite="true" />
+			<echo message="creating preCheck.sh script.."/>
+			<replace file="${preCheck.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@GROUP@@" value="${wls.install.group}"/>
+					<replacefilter token="@@USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+					<replacefilter token="@@PEGACONFIG_BASE@@" value="${wls.pega.top}"/>
+					<replacefilter token="@@UMASK@@" value="${wls.install.umask}"/>
+			</replace>
+			<chmod file="${preCheck.sh}" perm="750"/>
+	</target>
+	<target name="populate.recovery.sh">
+			<condition property="recovery.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="recovery.sh" value="${ConfigNOW.home}/custom/resources/recovery/recovery.sh" />
+			<fail unless="recovery.script">Could not populate "recovery.sh" file - ConfigNOW.home property must be set.</fail>
+			<copy file="resources/recovery/recovery.txt_tmp" tofile="${recovery.sh}" overwrite="true" />
+			<echo message="creating recovery.sh script.."/>
+			<replace file="${recovery.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@OS_USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@ASERVER_HOME@@" value="${wls.domain.dir}"/>
+					<replacefilter token="@@MSERVER_HOME@@" value="${wls.mserver.domain.dir}"/>
+					<replacefilter token="@@WLS_VERSION@@" value="${wls.version}"/>
+					<replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+					<replacefilter token="@@NM_HOME@@" value="${nodemanager.home}"/>
+					<replacefilter token="@@ADMIN_HOST@@" value="${wls.admin.Hostname}"/>
+					<replacefilter token="@@OLD_MS_HOST@@" value="${wls.server.old.host.name}"/>
+					<replacefilter token="@@OLD_MS_IP@@" value="${wls.server.old.host.ip}"/>
+					<replacefilter token="@@NEW_MS_HOST@@" value="${wls.server.new.host.name}"/>
+					<replacefilter token="@@PEGA_TOP@@" value="${wls.pega.top}"/>
+			</replace>
+			<chmod file="${recovery.sh}" perm="750"/>
+	</target>
+	<target name="populate.execute_recovery.sh">
+			<condition property="execute_recovery.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="execute_recovery.sh" value="${ConfigNOW.home}/custom/resources/recovery/execute_recovery.sh" />
+			<fail unless="execute_recovery.script">Could not populate "execute_recovery.sh" file - ConfigNOW.home, wls.install.user property must be set.</fail>
+			<copy file="resources/recovery/execute_recovery.txt_tmp" tofile="${execute_recovery.sh}" overwrite="true" />
+			<echo message="creating execute_recovery.sh script.."/>
+			<replace file="${execute_recovery.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@OS_USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@ASERVER_HOME@@" value="${wls.domain.dir}"/>
+					<replacefilter token="@@MSERVER_HOME@@" value="${wls.mserver.domain.dir}"/>
+					<replacefilter token="@@WLS_VERSION@@" value="${wls.version}"/>
+					<replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+					<replacefilter token="@@NM_HOME@@" value="${nodemanager.home}"/>
+					<replacefilter token="@@ADMINSERVER_NAME@@" value="${wls.admin.name}"/>
+					<replacefilter token="@@ADMIN_HOST@@" value="${wls.admin.Hostname}"/>
+					<replacefilter token="@@OLD_MS_HOST@@" value="${wls.server.old.host.name}"/>
+					<replacefilter token="@@OLD_MS_IP@@" value="${wls.server.old.host.ip}"/>
+					<replacefilter token="@@NEW_MS_HOST@@" value="${wls.server.new.host.name}"/>
+					<replacefilter token="@@PEGA_TOP@@" value="${wls.pega.top}"/>
+			</replace>	
+			<chmod file="${execute_recovery.sh}" perm="750"/>
+	</target>
+	<target name="populate.admin.recovery.sh">
+			<condition property="admin_recovery.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="admin_recovery.sh" value="${ConfigNOW.home}/custom/resources/recovery/admin_recovery.sh" />
+			<fail unless="admin_recovery.script">Could not populate "admin_recovery.sh" file - ConfigNOW.home property must be set.</fail>
+			<copy file="resources/recovery/admin_recovery.txt_tmp" tofile="${admin_recovery.sh}" overwrite="true" />
+			<echo message="creating admin_recovery.sh script.."/>
+			<replace file="${admin_recovery.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@OS_USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@ASERVER_HOME@@" value="${wls.domain.dir}"/>
+					<replacefilter token="@@MSERVER_HOME@@" value="${wls.mserver.domain.dir}"/>
+					<replacefilter token="@@WLS_VERSION@@" value="${wls.version}"/>
+					<replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+					<replacefilter token="@@ADMINSERVER_NAME@@" value="${wls.admin.name}"/>
+					<replacefilter token="@@ADMIN_HOST@@" value="${wls.admin.Hostname}"/>
+					<replacefilter token="@@NEW_MS_HOST@@" value="${wls.server.new.host.name}"/>
+					<replacefilter token="@@PEGA_TOP@@" value="${wls.pega.top}"/>
+					<replacefilter token="@@ADMIN_USER@@" value="${wls.admin.username}"/>
+					<replacefilter token="@@ADMIN_PWD@@" value="${wls.admin.password}"/>
+			</replace>
+			<chmod file="${admin_recovery.sh}" perm="750"/>
+	</target>
+	<target name="populate.admin.execute_recovery.sh">
+			<condition property="execute_admin_recovery.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="execute_admin_recovery.sh" value="${ConfigNOW.home}/custom/resources/recovery/execute_admin_recovery.sh" />
+			<fail unless="execute_admin_recovery.script">Could not populate "execute_admin_recovery.sh" file - ConfigNOW.home, wls.install.user property must be set.</fail>
+			<copy file="resources/recovery/execute_admin_recovery.txt_tmp" tofile="${execute_admin_recovery.sh}" overwrite="true" />
+			<echo message="creating execute_admin_recovery.sh script.."/>
+			<replace file="${execute_admin_recovery.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@OS_USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@ASERVER_HOME@@" value="${wls.domain.dir}"/>
+					<replacefilter token="@@MSERVER_HOME@@" value="${wls.mserver.domain.dir}"/>
+					<replacefilter token="@@WLS_VERSION@@" value="${wls.version}"/>
+					<replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+					<replacefilter token="@@ADMINSERVER_NAME@@" value="${wls.admin.name}"/>
+					<replacefilter token="@@ADMIN_HOST@@" value="${wls.admin.Hostname}"/>
+					<replacefilter token="@@NEW_MS_HOST@@" value="${wls.server.new.host.name}"/>
+					<replacefilter token="@@PEGA_TOP@@" value="${wls.pega.top}"/>
+			</replace>	
+			<chmod file="${execute_admin_recovery.sh}" perm="750"/>
+	</target>
+</project>

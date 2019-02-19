@@ -1,0 +1,40 @@
+<project name="JDK Installation">
+	<import file="ant-imports.xml"/>
+	<target name="install_jdk" depends="validate.java.config" description="Install JDK">
+		<property name="jdk.script" value="installJdk.sh" />
+		<exec executable="/bin/sh" failonerror="true">
+			<arg line="${jdk.script}"/>
+			<arg line="${wls.install.binaryHome}"/>
+			<arg line="${wls.install.umask}"/>
+			<arg line="${wls.domain.javaVersion}"/>
+			<arg line="${wls.oracle.top}"/>
+			<arg line="${wls.oracle.home}"/>
+			<arg line="${wls.install.user}"/>
+		<!--	<arg line="${wls.domain.javainstall.file}"/> -->
+			<arg line="${ConfigNOW.home}"/>
+			<arg line="${wls.domain.javainstall.home}"/>
+			<arg line="${wls.version}"/>
+		</exec>
+	</target>	
+	
+	<target name="validate.java.config">
+		<echo message="WebLogic Java Install Home: ${wls.domain.javainstall.home}"/>
+		<echo message="WebLogic Java Home: ${wls.domain.javahome}"/>
+<!--		<echo message="WebLogic Java Install File: ${wls.domain.javainstall.file}"/> -->
+		<echo message="WebLogic Oracle Base: ${wls.oracle.top}"/>
+		<if>
+			<not>
+				<and>
+					<isset property="wls.domain.javainstall.home" />
+					<isset property="wls.domain.javahome" />
+<!--					<isset property="wls.domain.javainstall.file" /> -->
+					<isset property="wls.oracle.top" />
+				</and>
+			</not>
+			<then>
+				<fail message="Required configuration properties for JDK are missing."/>
+			</then>
+		</if>
+	</target>
+	
+</project>

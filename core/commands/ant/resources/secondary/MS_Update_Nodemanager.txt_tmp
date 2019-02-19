@@ -1,0 +1,59 @@
+#!/bin/bash
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+DOMAIN_NAME="@@DOMAIN_NAME@@"
+DOMAIN_HOME="@@MSERVER_DOMAIN_HOME@@"
+NODEMGR_HOME="@@NODEMGR_HOME@@"
+IP_ADDRESS=$(hostname -i|cut -f2 -d ' ')
+
+SCRIPT_HOME="$PLATFORM_HOME/custom/resources/secondary"
+
+if [ -d "${NODEMGR_HOME}" ]
+then
+	echo "Node manager setup exists"
+	echo "Updating nodemanager.domains file."
+	cd $NODEMGR_HOME
+	if [ -f nodemanager.domains ]; then
+		touch nodemanager.domains
+	fi
+	if grep -q "${DOMAIN_NAME}=$DOMAIN_HOME/$DOMAIN_NAME" ${NODEMGR_HOME}/nodemanager.domains; then
+		echo "Domain entry for $DOMAIN_NAME  already exists. Exiting"
+		PID=`ps -ef | grep [N]ode | grep $NODEMGR_HOME | awk '{ print $2}'`
+		if [ -n "$PID" ]; then
+			kill -9 $PID
+		fi
+		echo "restarting nodemanager.. "
+		cd $DOMAIN_HOME/$DOMAIN_NAME/bin;./startnodemgr.sh
+		echo "nodemanager started.. "
+	else
+		echo -e "${DOMAIN_NAME}=$DOMAIN_HOME/$DOMAIN_NAME" >> ${NODEMGR_HOME}/nodemanager.domains
+		echo "Update nodemanager.domains file Completed"
+		PID=`ps -ef | grep [N]ode | grep $NODEMGR_HOME | awk '{ print $2}'`
+		if [ -n "$PID" ]; then
+			kill -9 $PID
+		fi
+		echo "restarting nodemanager.. "
+		cd $DOMAIN_HOME/$DOMAIN_NAME/bin;./startnodemgr.sh
+		echo "nodemanager started.. "
+	fi
+else 
+	mkdir -p $NODEMGR_HOME
+	cd $NODEMGR_HOME
+	echo "Updating nodemanager settings"
+	if [ ! -d security ];then
+		mkdir security
+		cp ${DOMAIN_HOME}/$DOMAIN_NAME/security/DemoIdentity.jks ${NODEMGR_HOME}/security
+	fi
+	cp ${DOMAIN_HOME}/$DOMAIN_NAME/nodemanager/nodemanager.domains ${NODEMGR_HOME}
+	cp $SCRIPT_HOME/nodemanager.properties ${NODEMGR_HOME}
+
+	sed -i "/ListenAddress/c\ListenAddress=$IP_ADDRESS" ${NODEMGR_HOME}/nodemanager.properties
+
+	PID=`ps -ef | grep [N]ode | grep $NODEMGR_HOME | awk '{ print $2}'`
+	if [ -n "$PID" ]; then
+		kill -9 $PID
+	fi
+	echo "starting nodemanager.. "
+	cd $DOMAIN_HOME/$DOMAIN_NAME/bin;./startnodemgr.sh
+	echo "nodemanager started.. "
+fi

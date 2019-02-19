@@ -1,0 +1,50 @@
+#! /bin/sh
+
+SCRIPT_PATH=$(readlink -f $0)
+SCRIPT=$(dirname $SCRIPT_PATH)
+
+OracleHome=@@ORACLE_HOME@@
+aserver=@@DOMAIN_HOME@@
+mserver=@@MS_DOMAIN_HOME@@
+domainName=@@DOMAIN_NAME@@
+
+currentHost=$(hostname)
+grep -i "<machine>" $aserver/$domainName/config/config.xml | awk -F\> '{print $2}' | awk -F\< '{print $1}' | sort | uniq  > hostlist1.txt
+
+
+function cacheCleanLocal {	
+
+	echo "Cleaning Cache from Local Host - $1"
+	##tmp, stage and cache cleanup 
+	[ -d "$aserver/$domainName" ] && find $aserver/$domainName/servers -maxdepth 2 -type d -name "cache" -o -name "tmp" -o -name "stage" -exec rm -rf {} + 2>/dev/null
+	[ -d "$aserver/$domainName" ] && find $aserver/$domainName -maxdepth 2 -type f -name "*.hprof" -exec rm {} \; 2>/dev/null
+	
+	if [ ! -z $mserver ]; then
+		[ -d "$mserver/$domainName" ] && find $mserver/$domainName/servers -maxdepth 2 -type d -name "cache" -o -name "tmp" -o -name "stage" -exec rm -rf {} + 2>/dev/null
+		[ -d "$mserver/$domainName" ] && find $mserver/$domainName -maxdepth 2 -type f -name "*.hprof" -exec rm {} \; 2>/dev/null
+	fi
+
+}
+
+function cacheCleanRemote {	
+
+	echo "Cleaning Cache from Remote MS Server Host - $1"
+	ssh -n $1 "
+	[ -d "$aserver/$domainName" ] && find $aserver/$domainName/servers -maxdepth 2 -type d -name "cache" -o -name "tmp" -o -name "stage" -exec rm -rf {} + 2>/dev/null
+	[ ! -z $mserver -a -d "$mserver/$domainName" ] && find $mserver/$domainName/servers -maxdepth 2 -type d -name "cache" -o -name "tmp" -o -name "stage" -exec rm -rf {} + 2>/dev/null
+	
+	[ -d "$aserver/$domainName" ] && find $aserver/$domainName -maxdepth 2 -type f -name "*.hprof" -exec rm {} \; 2>/dev/null
+	[ ! -z $mserver -a -d "$mserver/$domainName" ] && find $mserver/$domainName -maxdepth 2 -type f -name "*.hprof" -exec rm {} \; 2>/dev/null
+"
+
+}
+
+while read line
+do
+	if [ $line == $currentHost ]; then
+		cacheCleanLocal $line
+	else
+		cacheCleanRemote $line
+	fi
+done < hostlist1.txt
+

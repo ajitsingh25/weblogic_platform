@@ -1,0 +1,112 @@
+#!/bin/sh
+
+#Script Execution Directory i.e Bin directory
+SCRIPT_HOME="$(dirname $(readlink -f $0))"
+CONFIG_HOME=${SCRIPT_HOME}/../config
+
+#Log setup
+LOGDIR=/tmp/patch/logs
+FILEDATE="`date +%m-%d-%y-%H:%M`"
+LOGFILENAME="$LOGDIR/patchApply_${FILEDATE}.log"
+
+#Set Patch quarter release dates
+platformRootDir=$1
+patchZips=$2
+OracleHome=$3
+JavaHome=$4
+PATCH_QUARTER=$5
+Patch_Dir=$6
+
+WL_PSU_Patch=$platformRootDir/../$Patch_Dir
+PATCH_ZIP_HOME=$WL_PSU_Patch/$PATCH_QUARTER
+
+if [ ! -d $LOGDIR ]; then
+    	mkdir -p $LOGDIR
+#	chown $USER:$USER $LOGDIR
+fi
+
+touch $LOGFILENAME
+#chown $USER:$USER $LOGFILENAME
+
+#Set the Env
+export PATH=$OracleHome/OPatch:$JavaHome/bin:$PATH
+export PATCH_TOP=$LOGDIR/wlspatch
+
+if [ ! -d $PATCH_TOP ] || [ "$PATCH_TOP" = "" ]; then
+	echo "[INFO] PATCH_TOP $PATCH_TOP doesn't exists, creating now ...." >> $LOGFILENAME
+    	mkdir -p $PATCH_TOP
+	echo "[INFO] Created $PATCH_TOP" >> $LOGFILENAME
+	echo >> $LOGFILENAME
+fi
+
+
+function apply_patch {
+	PATCH_ZIP_NAME=$1
+	
+	echo "[INFO] Patch Zip File : $PATCH_ZIP_NAME"  | tee -a $LOGFILENAME
+	echo >> $LOGFILENAME
+		
+	PATCHID=`echo $PATCH_ZIP_NAME |awk -F'_' '{print $1}'|awk -F 'p' '{print $2}'`
+        if [ ! -f $PATCH_ZIP_HOME/$PATCH_ZIP_NAME ]; then
+                echo "[INFO] $PATCH_ZIP_NAME doesn't exists in directory $PATCH_ZIP_HOME. Aborting ...."  | tee -a $LOGFILENAME
+                echo >> $LOGFILENAME
+                exit 1
+        else
+                if [ -d $PATCH_TOP/$PATCHID ]; then
+                        rm -rf $PATCH_TOP/$PATCHID
+                fi
+                echo "[INFO] unzip $PATCH_ZIP_NAME ..." | tee -a $LOGFILENAME
+                echo >> $LOGFILENAME
+                unzip -od $PATCH_TOP $PATCH_ZIP_HOME/$PATCH_ZIP_NAME 1> /dev/null
+#		chown -R $USER:$USER $PATCH_TOP
+        fi
+		
+	echo >> $LOGFILENAME
+        echo "[INFO] Patching WLS $PATCHID... " | tee -a $LOGFILENAME
+        echo >> $LOGFILENAME
+		
+        cd $PATCH_TOP/$PATCHID
+        opatch apply -force -silent -jdk $JavaHome | tee -a $LOGFILENAME
+        # Get return code
+        return_code=$?
+        # Error applying the patch, abort
+        if [ "$return_code" != "0" ]; then
+                echo "[ERROR] Error in executing optach: Aborting now ..."  | tee -a $LOGFILENAME
+                exit $return_code | tee -a $LOGFILENAME
+        fi
+        cd $SCRIPT_HOME
+}
+
+function wlsBackup() {
+	echo -e "[INFO] Taking Backup of WLS12212 before patching it"
+	cd $OracleHome/..
+	if [ -f wl12212*.tar.gz ]; then
+		rm wl12212*.tar.gz
+		tar cpfz wl12212_${FILEDATE}.tar.gz wl12212
+	fi
+	cd $SCRIPT_HOME
+}
+
+#lsinventry before applying patch 
+#echo "collecting lsInventory before applying patch."
+echo "======================================="     >>$LOGFILENAME
+echo "OPatch lsinventory Before patch applied"     >>$LOGFILENAME
+echo "======================================="     >>$LOGFILENAME
+#opatch lsinventory  2>&1 >> $LOGFILENAME
+echo >> $LOGFILENAME
+
+#apply PSU Patch
+IFS=',' read -ra patch_zip <<< "$patchZips"
+for i in "${patch_zip[@]}"
+do
+	PATCHID=`echo $i |awk -F'_' '{print $1}'|awk -F 'p' '{print $2}'`
+	c=`opatch lspatches | grep $PATCHID | wc -l`
+	if [ $c != 1 ]; then
+		#wlsBackup
+		apply_patch $i 
+	else
+		echo "[INFO] patch $PATCHID already exists, skipping it ..."
+		continue
+	fi
+done
+

@@ -1,0 +1,5 @@
+*/5 * * * *  /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/pool_monitoring.sh > /dev/null 2>&1
+*/5 * * * *  /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/disk_monitoring.sh > /dev/null 2>&1
+*/5 * * * *  /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/swap_monitoring.sh > /dev/null 2>&1
+*/5 * * * *  /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/load_monitoring.sh > /dev/null 2>&1
+*/5 * * * *  /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/cpu_monitoring.sh > /dev/null 2>&1

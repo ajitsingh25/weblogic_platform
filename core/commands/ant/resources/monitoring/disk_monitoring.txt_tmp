@@ -1,0 +1,58 @@
+#!/bin/bash
+
+
+################ DEFINE VARIABLES HERE ####################
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+THRESHOLD="@@WARNING_THRESHOLD@@"
+mailto="@@ALERT_MAIL@@"
+PEGA_TOP="@@PEGA_TOP@@"
+DOMAIN_TOP="@@DOMAIN_TOP@@"
+SCRIPT_HOME=$PLATFORM_HOME/core/commands/ant/resources/monitoring
+HOSTNAME=$(hostname)   				        				
+TEMPFILE="$(mktemp)"   
+CHECK_DIRECTORIES="$PEGA_TOP $DOMAIN_TOP"
+
+# store all disk info here
+TEMPFILE="$(mktemp)"
+EMAIL=""
+
+#Directories to Check
+#CHECK_DIRECTORIES="/x/web/gops/ /x/bea-wl1213/user_projects/domains/"
+#mailto="ajitsingh25@localcorp.com"
+
+for line in $(df -hP | egrep '^/dev/' | awk '{ print $6 "_:_" $5 }')
+do
+        part=$(echo "$line" | awk -F"_:_" '{ print $1 }')
+        part_usage=$(echo "$line" | awk -F"_:_" '{ print $2 }' | cut -d'%' -f1 )
+
+         if [ $part_usage -ge $THRESHOLD -a -z "$EMAIL" ];
+        then
+                EMAIL="$(date)\n<h4><b>Running out of diskspace on $HOSTNAME</h4></b>\n"
+                EMAIL="$EMAIL<b><p style=\"color:red;\">$part\t($part_usage%)\t\t>= (Threshold = $THRESHOLD%)</p></b>"
+
+        elif [ $part_usage -ge $THRESHOLD ];
+        then
+                EMAIL="$EMAIL<b><p style=\"color:red;\">$part\t($part_usage%)\t\t>= (Threshold = $THRESHOLD%)</p></b>"
+        fi
+done
+echo $EMAIL
+
+if [ -n "$EMAIL" ];
+then
+		# Mail message body
+		echo "<html><body style=\"background-color:AliceBlue;\"><pre>"                                  >> $TEMPFILE
+		echo -e $EMAIL		>> $TEMPFILE
+		echo -e "\n#########################################################################"           >> $TEMPFILE
+		echo -e "<b>Top Ten Disk Space Usage</b>"                                                       >> $TEMPFILE
+		echo "#########################################################################"                >> $TEMPFILE
+		for DIR_CHECK in $CHECK_DIRECTORIES
+		do
+				echo "" 																						>> $TEMPFILE
+				echo -e "<b>The $DIR_CHECK Directory:</b>"                               						>> $TEMPFILE
+				du -S $DIR_CHECK 2>/dev/null | sort -rn | sed '{11,$D; =}' | sed 'N; s/\n/ /' |  gawk '{printf $1 ":" "\t" $2 "\t" $3 "\n"}'      >> $TEMPFILE
+		done
+		echo " "                                                                          				>> $TEMPFILE
+		echo "</pre></body></html>"                                                      				>> $TEMPFILE
+        mail -s "$(echo -e "Partition(s) almost out of diskspace on $HOSTNAME\nContent-Type: text/html")" $mailto < $TEMPFILE
+fi

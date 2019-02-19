@@ -1,0 +1,17 @@
+#!/bin/sh
+
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+DOMAIN_NAME="@@DOMAIN_NAME@@"
+ORACLE_HOME="@@ORACLE_HOME@@"
+MSERVER_DOMAIN_HOME="@@MSERVER_DOMAIN_HOME@@"
+
+TEMPLATE_HOME=$PLATFORM_HOME/custom/resources/secondary
+unpack_domain() {
+    if [ -d $MSERVER_DOMAIN_HOME/$DOMAIN_NAME ]; then
+        echo 'REMOVING $MSERVER_DOMAIN_HOME/$DOMAIN_NAME '
+        rm -rf $MSERVER_DOMAIN_HOME/$DOMAIN_NAME
+    fi
+    ${ORACLE_HOME}/oracle_common/common/bin/unpack.sh -domain=$MSERVER_DOMAIN_HOME/$DOMAIN_NAME -template=$TEMPLATE_HOME/${DOMAIN_NAME}.jar
+}
+unpack_domain

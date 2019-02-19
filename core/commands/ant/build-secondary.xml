@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Generate-Secondary-Dynamic-Scripts">
+    <import file="ant-imports.xml"/>
+
+	<target name="secondary" depends="populate.setupCron.sh.secondary,populate.install_WLS.sh,populate.install_jdk.sh,populate.applyPatch.sh,copy.monitoring.secondary,copy.domain_templete.secondary,populate.preCheck.sh.secondary,populate.MS_Update_Nodemanager.sh,populate.secondary.sh,populate.execute_secondary.sh">
+		<echo message="SuccessFully Created scripts for secondary hosts.."/>
+	</target>
+	
+	<target name="populate.applyPatch.sh">
+			<condition property="applyPatch.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+					<isset property="opatch.patchZipName"/>
+					<isset property="wls.oracle.home"/>
+					<isset property="wls.domain.javahome"/>
+					<isset property="opatch.quarter"/>
+					<isset property="opatch.patchesdir"/>
+			</and>
+			</condition>
+			
+			<property name="applyPatch.sh" value="${ConfigNOW.home}/custom/resources/secondary/applyPatch.sh" />
+			<fail unless="applyPatch.script">Could not populate "applyPatch.sh" file - opatch.patchZipName, wls.oracle.home, wls.domain.javahome, opatch.quarter and opatch.patchesdir property must be set.</fail>
+			<copy file="resources/secondary/applyPatch.txt_tmp" tofile="${applyPatch.sh}" overwrite="true" />
+			<copy file="${ConfigNOW.home}/../${opatch.patchesdir}/${opatch.quarter}/${opatch.patchZipName}" todir="${ConfigNOW.home}/custom/resources/secondary" overwrite="true" />
+			<echo message="creating applyPatch.sh script.."/>
+			<replace file="${applyPatch.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@PATCH_ZIP@@" value="${opatch.patchZipName}"/>
+					<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+					<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+					<replacefilter token="@@PATCH_QUATER@@" value="${opatch.quarter}"/>
+					<replacefilter token="@@PATCH_SHARED_DIR@@" value="${opatch.patchesdir}"/>
+			</replace>
+			<chmod file="${applyPatch.sh}" perm="750"/>
+	</target>
+	<target name="populate.install_jdk.sh">
+			<condition property="install_jdk.script">
+			<and>
+					<isset property="wls.install.binaryHome"/>
+					<isset property="wls.install.umask"/>
+					<isset property="wls.domain.javaVersion"/>
+					<isset property="wls.oracle.top"/>
+					<isset property="wls.oracle.home"/>
+					<isset property="wls.install.user"/>
+			</and>
+			</condition>
+			
+			<property name="install_jdk.sh" value="${ConfigNOW.home}/custom/resources/secondary/install_jdk.sh" />
+			<fail unless="install_jdk.script">Could not populate "install_jdk.sh" file - wls.install.binaryHome, wls.install.umask, wls.domain.javaVersion, wls.oracle.top and wls.oracle.home property must be set.</fail>
+			<copy file="resources/secondary/install_jdk.txt_tmp" tofile="${install_jdk.sh}" overwrite="true" />
+			<copy todir="${ConfigNOW.home}/custom/resources/secondary"  verbose="yes" overwrite="true">
+				<fileset dir="${ConfigNOW.home}/../${wls.install.binaryHome}/">
+					<include name="**/*.tar.gz"/>
+				</fileset>
+			</copy>
+			<echo message="creating install_jdk.sh script.."/>
+			<replace file="${install_jdk.sh}">
+					<replacefilter token="@@BINARY_HOME@@" value="${wls.install.binaryHome}"/>
+					<replacefilter token="@@UMASK@@" value="${wls.install.umask}"/>
+					<replacefilter token="@@JDK_VERSION@@" value="${wls.domain.javaVersion}"/>
+					<replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+					<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+					<replacefilter token="@@USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@JAVA_INSTALL_HOME@@" value="${wls.domain.javainstall.home}"/>
+					<replacefilter token="@@WL_VERSION@@" value="${wls.version}"/>
+			</replace>
+			<chmod file="${install_jdk.sh}" perm="750"/>
+	</target>
+	<target name="populate.install_WLS.sh" depends="populate.silent.xml,populate.oraInst.xml">
+			<condition property="install_WLS.script">
+			<and>
+				<isset property="wls.install.binaryHome"/>
+				<isset property="ConfigNOW.home"/>
+				<isset property="wls.oracle.top"/>
+				<isset property="wls.oracle.home"/>
+				<isset property="wls.domain.javahome"/>
+				<isset property="silent.xml"/>
+				<isset property="oraInst.xml"/>
+				<isset property="wls.oracle.inventory"/>
+			</and>
+			</condition>
+			
+			<property name="install_WLS.sh" value="${ConfigNOW.home}/custom/resources/secondary/install_WLS.sh" />
+			<fail unless="install_WLS.script">Could not populate "install_WLS.sh" file - wls.install.binaryHome, wls.oracle.top, wls.oracle.home, wls.domain.javahome and wls.oracle.inventory property must be set.</fail>
+			<copy file="resources/secondary/install_WLS.txt_tmp" tofile="${install_WLS.sh}" overwrite="true" />
+			<copy todir="${ConfigNOW.home}/custom/resources/secondary"  verbose="yes" overwrite="true">
+				<fileset dir="${ConfigNOW.home}/../${wls.install.binaryHome}/">
+					<include name="**/*.jar"/>
+				</fileset>
+			</copy>
+			<echo message="creating install_WLS.sh script.."/>
+			<replace file="${install_WLS.sh}">
+					<replacefilter token="@@BINARY_HOME@@" value="${wls.install.binaryHome}"/>
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+					<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+					<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+					<replacefilter token="@@WLS_RSP_FILE@@" value="${silent.xml}"/>
+					<replacefilter token="@@ORA_INV_FILE@@" value="${oraInst.xml}"/>
+					<replacefilter token="@@ORA_INV_DIR@@" value="${wls.oracle.inventory}"/>
+					<replacefilter token="@@WL_VERSION@@" value="${wls.version}"/>
+			</replace>
+			<chmod file="${install_WLS.sh}" perm="750"/>
+	</target>
+	<target name="populate.silent.xml">
+		<condition property="silent.props.exist">
+			<and>
+				<isset property="wls.oracle.home"/>
+				<isset property="wls.name"/>
+			</and>
+		</condition>
+	
+		<property name="silent.xml" value="${ConfigNOW.home}/custom/resources/secondary/silent_weblogic.txt" />
+		<fail unless="silent.props.exist">Could not populate silent_weblogic.xml file - wls.oracle.home and wls.name properties must be set.</fail>
+		<copy file="resources/silent_weblogic_12c.txt" tofile="${silent.xml}" overwrite="true" />
+		<echo message="before replacing"/>
+		<replace file="${silent.xml}">
+			<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+			<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+		</replace>
+	</target>
+	<target name="populate.oraInst.xml">
+		<condition property="oraInst.props.exist">
+			<and>
+				<isset property="wls.oracle.inventory"/>
+				<isset property="wls.install.group"/>
+			</and>
+		</condition>
+			<property name="oraInst.xml" value="${ConfigNOW.home}/custom/resources/secondary/oraInst.txt" />
+			<fail unless="oraInst.props.exist">Could not populate oraInst.txt file - wls.oracle.inventory and wls.install.group properties must be set.</fail>
+			<copy file="resources/oraInst.loc" tofile="${oraInst.xml}" overwrite="true" />
+			<echo message="before replacing"/>
+			<replace file="${oraInst.xml}">
+				<replacefilter token="@@OUI_INVENTORY_DIRECTORY@@" value="${wls.oracle.inventory}"/>
+				<replacefilter token="@@OUI_INSTALL_GROUP@@" value="${wls.install.group}"/>
+			</replace>
+    </target>
+	<target name="copy.monitoring.secondary">
+		<copy todir="${ConfigNOW.home}/custom/resources/secondary" overwrite="true">
+			<fileset dir="${ConfigNOW.home}/custom/resources/">
+				<include name="monitoring/**" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.domain_templete.secondary">
+		<!--copy file="resources/tmp/wlsUnpack.sh" tofile="${ConfigNOW.home}/custom/resources/secondary" overwrite="true" /-->
+		<copy todir="${ConfigNOW.home}/custom/resources/secondary" verbose="yes" overwrite="true">
+			<fileset dir="resources/tmp/">
+				<include name="**/wlsUnpack.sh" />
+			</fileset>
+			<fileset dir="${ConfigNOW.home}/custom/resources/templates">
+				<include name="**/${wls.domain.name}.jar" />
+			</fileset>
+			<fileset dir="${nodemanager.home}">
+				<include name="**/nodemanager.properties" />
+			</fileset>				
+		</copy>
+	</target>
+	<target name="populate.setupCron.sh.secondary">
+			<condition property="setupCron.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="setupCron.sh" value="${ConfigNOW.home}/custom/resources/secondary/setupCron.sh" />
+			<fail unless="setupCron.script">Could not populate "setupCron.sh" file - ConfigNOW.home property must be set.</fail>
+			<copy file="resources/secondary/setupCron.txt_tmp" tofile="${setupCron.sh}" overwrite="true" />
+			<echo message="creating setupCron.sh script.."/>
+			<replace file="${setupCron.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+			</replace>
+			<chmod file="${setupCron.sh}" perm="750"/>
+	</target>
+	<target name="populate.preCheck.sh.secondary">
+			<condition property="preCheck.script">
+			<and>
+					<isset property="wls.install.group"/>
+					<isset property="wls.install.user"/>
+					<isset property="wls.oracle.top"/>
+					<isset property="wls.install.umask"/>
+			</and>
+			</condition>
+			
+			<property name="preCheck.sh" value="${ConfigNOW.home}/custom/resources/secondary/preCheck.sh" />
+			<fail unless="preCheck.script">Could not populate "preCheck.sh" file - wls.install.group,wls.install.user and wls.oracle.top properties must be set.</fail>
+			<copy file="resources/preCheck_tmp.sh" tofile="${preCheck.sh}" overwrite="true" />
+			<echo message="creating preCheck.sh script.."/>
+			<replace file="${preCheck.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@GROUP@@" value="${wls.install.group}"/>
+					<replacefilter token="@@USER@@" value="${wls.install.user}"/>
+					<replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+					<replacefilter token="@@PEGACONFIG_BASE@@" value="${wls.pega.top}"/>
+					<replacefilter token="@@UMASK@@" value="${wls.install.umask}"/>
+			</replace>
+			<chmod file="${preCheck.sh}" perm="750"/>
+	</target>
+	<target name="populate.MS_Update_Nodemanager.sh">
+			<condition property="MS_Update_Nodemanager.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+					<isset property="wls.domain.name"/>
+					<isset property="wls.mserver.domain.dir"/>
+					<isset property="nodemanager.home"/>
+			</and>
+			</condition>
+			<property name="MS_Update_Nodemanager.sh" value="${ConfigNOW.home}/custom/resources/secondary/MS_Update_Nodemanager.sh" />
+			<fail unless="MS_Update_Nodemanager.script">Could not populate "MS_Update_Nodemanager.sh" file - wls.domain.name, wls.mserver.domain.dir, wls.oracle.home property must be set.</fail>
+			<copy file="resources/secondary/MS_Update_Nodemanager.txt_tmp" tofile="${MS_Update_Nodemanager.sh}" overwrite="true" />
+			<echo message="creating MS_Update_Nodemanager.sh script.."/>
+			<replace file="${MS_Update_Nodemanager.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+					<replacefilter token="@@MSERVER_DOMAIN_HOME@@" value="${wls.mserver.domain.dir}"/>
+					<replacefilter token="@@NODEMGR_HOME@@" value="${nodemanager.home}"/>
+			</replace>
+			<chmod file="${MS_Update_Nodemanager.sh}" perm="750"/>
+	</target>
+	<target name="populate.secondary.sh">
+			<condition property="secondary.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+			</and>
+			</condition>
+			
+			<property name="secondary.sh" value="${ConfigNOW.home}/custom/resources/secondary/secondary.sh" />
+			<fail unless="secondary.script">Could not populate "secondary.sh" file - ConfigNOW.home property must be set.</fail>
+			<copy file="resources/secondary/secondary.txt_tmp" tofile="${secondary.sh}" overwrite="true" />
+			<echo message="creating secondary.sh script.."/>
+			<replace file="${secondary.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+			</replace>
+			<chmod file="${secondary.sh}" perm="750"/>
+	</target>
+	<target name="populate.execute_secondary.sh">
+			<condition property="execute_secondary.script">
+			<and>
+					<isset property="ConfigNOW.home"/>
+					<isset property="wls.install.user"/>
+			</and>
+			</condition>
+			
+			<property name="execute_secondary.sh" value="${ConfigNOW.home}/custom/resources/secondary/execute_secondary.sh" />
+			<fail unless="execute_secondary.script">Could not populate "execute_secondary.sh" file - ConfigNOW.home, wls.install.user property must be set.</fail>
+			<copy file="resources/secondary/execute_secondary.txt_tmp" tofile="${execute_secondary.sh}" overwrite="true" />
+			<echo message="creating execute_secondary.sh script.."/>
+			<replace file="${execute_secondary.sh}">
+					<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+					<replacefilter token="@@OS_USER@@" value="${wls.install.user}"/>
+			</replace>
+			<chmod file="${execute_secondary.sh}" perm="750"/>
+	</target>
+</project>

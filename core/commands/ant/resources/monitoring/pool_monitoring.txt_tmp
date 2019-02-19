@@ -1,0 +1,100 @@
+#!/bin/sh	
+hostName_lower=`echo $(hostname)  | awk '{print tolower($0)}'`
+testseq=stage
+if [[ $hostName_lower == *"$testseq"* ]];
+then
+    export ENV_NAME="stage"
+else
+    export ENV_NAME="prod"
+fi
+	
+set_variables ()
+{
+	START_TIME=`date +"%T"`
+	ALERT_EMAILS="@@OWNERS_EMAIL_ID@@"
+	PLATFORM_HOME="@@CONFIG_HOME@@"
+	ENV=$ENV_NAME
+	SCRIPT_HOME=$PLATFORM_HOME/core/commands/ant/resources/monitoring
+	HTML_FILE=$SCRIPT_HOME/alert_email.html
+	DOMAIN_PROPERTIES_FILE=$SCRIPT_HOME/domain.properties
+	HEADER="<html>
+	<head>
+	<title>ALERT</title>
+	
+	<!-- CSS -->
+	<style>
+	.myTable {
+         width: 100%;
+	 text-align: left;
+	 background-color: #F0F8FF;
+	 border-collapse: collapse; 
+	}
+	.myTable th { 
+	 background-color: #6495ED;
+	 color: white; 
+	}
+	.myTable td, 
+	.myTable th { 
+	 padding: 10px;
+	 border: 1px solid #6495ED; 
+	}
+	</style>
+		      
+	</head>
+	<body>
+	<!-- HTML -->
+	<table class="myTable">
+	<tr>
+	<th>Domain</th>
+	<th>Svr</th>
+	<th>DSName</th>
+	<th>ActiveHighCount</th>
+	<th>ActiveCurrCount(>90%)</th>
+	<th>MaxCapacity</th>
+	<th>State</th>
+	</tr>"
+	FOOTER="</table></body></html>"
+	export TOLIST="$ALERT_EMAILS"
+	export SUB="Connection Pools utilized more than 90% for below data sources"
+}
+
+
+run_py ()
+{
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+		$PLATFORM_HOME/wlscli.sh jdbc_pool_monitoring $ENV $1
+	done < "$DOMAIN_PROPERTIES_FILE"
+}
+
+send_email ()
+{
+	if [ -f $HTML_FILE ]; then
+	        exec 3<> $HTML_FILE && awk -v TEXT="$HEADER" 'BEGIN {print TEXT}{print}' $HTML_FILE  >&3
+	        echo $FOOTER >> $HTML_FILE
+	        mail -s "$(echo -e "$SUB\nContent-Type: text/html")" $TOLIST < $HTML_FILE
+	        echo " email sent ....."
+	        rm $HTML_FILE 
+	else
+		echo "No alert Hence no mail to sent ....."
+		if [ -f $HTML_FILE ]; then
+			rm $HTML_FILE
+		fi
+	fi
+}
+
+execution ()
+{
+	set_variables
+	if [ -f $DOMAIN_PROPERTIES_FILE ]; then
+		DOMAIN_ARRAY=($(awk  '/^[^#]/ { print $1 }' $DOMAIN_PROPERTIES_FILE))
+		for i in "${DOMAIN_ARRAY[@]}"
+		do
+			run_py $i
+		done
+		send_email
+	else 
+		exit
+	fi
+}
+
+execution

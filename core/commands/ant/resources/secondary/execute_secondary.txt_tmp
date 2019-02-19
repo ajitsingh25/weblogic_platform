@@ -1,0 +1,58 @@
+#!/bin/bash
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+
+#YOUR REMOTE SSH INFORMATION
+USERNAME="@@OS_USER@@"
+REMOTE=$1
+PORT=22
+
+#GET LOCAL DIRECTORY PATH AND REMOTE DIRECTORY PATH
+LOCAL_PATH="$PLATFORM_HOME/custom/resources/secondary"
+REMOTE_PATH="$PLATFORM_HOME/custom/resources"
+
+#CHECK LOCAL PATH AND REMOTE PATH NOT EMPTY
+if [ -z "$LOCAL_PATH" -o -z "$REMOTE_PATH" ]; then
+  echo "We need <directory to check on local> <remote path to copy>"
+  exit
+fi
+
+function test_ssh_connection(){
+	echo "Testing connection to ${REMOTE}..."
+	ssh -n -o NumberOfPasswordPrompts=0 ${USERNAME}@${REMOTE}
+	if [ "$?" -ne "0" ]; then
+	  echo "FATAL: You do not have passwordless ssh working."
+	  echo "Try running ssh-add."
+	  exit 1
+	fi
+}
+
+function check_remote_dir() {
+	echo -e "\ntesting remote directory: $REMOTE_PATH "
+
+	if ssh $USERNAME@$REMOTE "[ ! -d $REMOTE_PATH ]"; then
+			printf "\nCreating: $REMOTE_PATH on $USERNAME@$REMOTE\n"
+			ssh $USERNAME@$REMOTE "mkdir -p $REMOTE_PATH"
+	else
+			printf "[OK]\n"
+	fi
+}
+
+function scp_to_remote(){
+	scp -r $LOCAL_PATH $USERNAME@$REMOTE:$REMOTE_PATH
+	if [ "$?" -ne "0" ]; then
+	  echo "An error occurred."
+	else
+	  echo "Successfully copied $REMOTE_PATH to $REMOTE"
+	fi
+}
+
+function execute_secondary_scripts(){
+	 ssh $USERNAME@$REMOTE "$LOCAL_PATH/secondary.sh"
+}
+
+
+test_ssh_connection
+check_remote_dir
+scp_to_remote
+execute_secondary_scripts

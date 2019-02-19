@@ -1,0 +1,1450 @@
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  WLST support: False
+ INFO  Running command core/commands/ant/build-jdk.xml as ant target in build file: core/commands/ant/build-jdk.xml
+ 
+validate.java.config:
+     [echo] WebLogic Java Install Home: /x/web/gops/oracle/product/jdk1.8.0_171
+     [echo] WebLogic Java Home: /x/web/gops/oracle/product/jdk
+     [echo] WebLogic Oracle Base: /x/web/gops/oracle
+
+install_jdk:
+     [exec] [INFO] Installing JDK ...
+     [exec] [INFO] JDK is extracted to /x/web/gops/oracle/product/jdk1.8.0_171
+     [exec] [WARNING] /x/web/gops/oracle/product/jdk1.8.0_171/../jdk Link is Missing. Fixing it ..
+     [exec] [INFO] Creating Link
+     [exec] [INFO] /x/web/gops/oracle/product/jdk1.8.0_171/../jdk link created now...
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  WLST support: False
+ INFO  Running command core/commands/ant/build-weblogic.xml as ant target in build file: core/commands/ant/build-weblogic.xml
+ 
+populate.silent.xml:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/core/commands/ant/tmp
+     [echo] before replacing
+
+populate.oraInst.xml:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/core/commands/ant/tmp
+     [echo] before replacing
+
+install_weblogic:
+     [echo] Installing WebLogic with the following settings:
+     [echo] ================================================
+     [echo] BEA/Oracle Home: /x/web/gops/oracle/product/wl12213
+     [echo] WebLogic Home: /x/web/gops/oracle/product/wl12213/wlserver
+     [echo] Java Home: /x/web/gops/oracle/product/jdk
+     [echo] ================================================
+     [echo] Please be patient the silent installer may take several minutes to run.
+     [exec] [INFO] Creating /x/web/gops/oracle/oraInventory
+     [exec] [INFO] Install Weblogic Binary
+     [exec] Launcher log file is /tmp/OraInstall2018-10-25_04-58-36AM/launcher2018-10-25_04-58-36AM.log.
+     [exec] Extracting the installer . . . . . . . . Done
+     [exec] Checking if CPU speed is above 300 MHz.   Actual 2300.000 MHz    Passed
+     [exec] Checking swap space: must be greater than 512 MB.   Actual 16383 MB    Passed
+     [exec] Checking if this platform requires a 64-bit JVM.   Actual 64    Passed (64-bit not required)
+     [exec] Checking temp space: must be greater than 300 MB.   Actual 1698 MB    Passed
+     [exec] Preparing to launch the Oracle Universal Installer from /tmp/OraInstall2018-10-25_04-58-36AM
+     [exec] Log: /tmp/OraInstall2018-10-25_04-58-36AM/install2018-10-25_04-58-36AM.log
+     [exec] Copyright (c) 1996, 2017, Oracle and/or its affiliates. All rights reserved.
+     [exec] Reading response file..
+     [exec] Skipping Software Updates
+     [exec] Starting check : CertifiedVersions
+     [exec] Problem: This Oracle software was not certified on the current operating system at the time it was made generally available. It may have been certified following general availability.
+     [exec] 
+     [exec] Recommendation: Check the Supported System Configurations Guide (http://www.oracle.com/technetwork/middleware/ias/downloads/fusion-certification-100350.html) for further details. If your operating system is certified and no other prerequisite checks have failed, press "Next" if you wish to continue.
+     [exec] 
+     [exec] Expected result: One of oracle-6, oracle-7, redhat-7, redhat-6, SuSE-11, SuSE-12
+     [exec] Actual result: redhat-5.4
+     [exec] Warning: Check:CertifiedVersions completed with warnings.
+     [exec] 
+     [exec] 
+     [exec] Starting check : CheckJDKVersion
+     [exec] Expected result: 1.8.0_131
+     [exec] Actual Result: 1.8.0_171
+     [exec] Check complete. The overall result of this check is: Passed
+     [exec] CheckJDKVersion Check: Success.
+     [exec] 
+     [exec] 
+     [exec] Validations are disabled for this session.
+     [exec] Verifying data
+     [exec] Copying Files
+     [exec] Percent Complete : 10
+     [exec] Percent Complete : 20
+     [exec] Percent Complete : 30
+     [exec] Percent Complete : 40
+     [exec] Percent Complete : 50
+     [exec] Percent Complete : 60
+     [exec] Percent Complete : 70
+     [exec] Percent Complete : 80
+     [exec] Percent Complete : 90
+     [exec] Percent Complete : 100
+     [exec] 
+     [exec] The installation of Oracle Fusion Middleware 12c WebLogic Server and Coherence 12.2.1.3.0 completed successfully.
+     [exec] Logs successfully copied to /x/web/gops/oracle/oraInventory/logs.
+     [exec] Below WLS Files are going to be Updated to reflect JDK symlink..
+     [exec] /x/web/gops/oracle/product/wl12213/oui/bin/setProperty.sh
+     [exec] /x/web/gops/oracle/product/wl12213/oui/bin/compareInventory.sh
+     [exec] /x/web/gops/oracle/product/wl12213/oui/bin/viewInventory.sh
+     [exec] /x/web/gops/oracle/product/wl12213/oui/bin/launch.sh
+     [exec] /x/web/gops/oracle/product/wl12213/inventory/Components/oracle.nginst.common/13.9.2.0.0/context.xml
+     [exec] /x/web/gops/oracle/product/wl12213/inventory/Components/oracle.wls.core.app.server/12.2.1.3.0/context.xml
+     [exec] /x/web/gops/oracle/product/wl12213/oui/.globalEnv.properties
+   [delete] Deleting: /x/mytemp/asingh/wls_paas/platform/core/commands/ant/tmp/silent_weblogic.txt
+   [delete] Deleting: /x/mytemp/asingh/wls_paas/platform/core/commands/ant/tmp/oraInst.txt
+     [copy] Copying 1 file to /x/web/gops/oracle/product/wl12213/wlserver/server/lib/consoleapp/webapp/framework/skins/wlsconsole/images
+     [copy] Copying 1 file to /x/web/gops/oracle/product/wl12213/wlserver/server/lib/consoleapp/webapp/framework/skins/wlsconsole/images
+     [copy] Copying 1 file to /x/web/gops/oracle/product/wl12213/wlserver/server/lib/consoleapp/webapp/framework/skins/wlsconsole/images
+     [echo] Disabling WLS Derby
+     [move] Moving 1 file to /x/web/gops/oracle/product/wl12213/wlserver/common/derby/lib
+     [echo] ================================================
+     [echo] ================================================
+     [echo] WebLogic Install Finished
+     [echo] ================================================
+     [echo] ================================================
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  Creating setenv file
+ INFO  Assumed linux operating system
+ weblogic_loc = /x/web/gops/oracle/product/wl12213/wlserver
+Command = CLASSPATH=/x/web/gops/oracle/product/wl12213/wlserver/modules/features/wlst.wls.classpath.jar:/x/web/gops/oracle/product/wl12213/wlserver/server/lib/weblogic.jar:/x/mytemp/asingh/wls_paas/platform/core/engine/lib/wlsPaasUtils.jar
+setWLSEnv = /x/web/gops/oracle/product/wl12213/wlserver/server/bin/setWLSEnv.sh
+INFO  Located weblogic.jar at /x/web/gops/oracle/product/wl12213/wlserver/server/lib/weblogic.jar
+ call set_env again.
+found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-applyPatch.xml as ant target in build file: core/commands/ant/build-applyPatch.xml
+ 
+validate.patch.config:
+     [echo] WebLogic Java Install Home: /x/web/gops/oracle/product/jdk1.8.0_171
+     [echo] WebLogic Java Home: /x/web/gops/oracle/product/jdk
+     [echo] WebLogic Patch Install File: p27342434_122130_Generic.zip	
+
+patch_apply:
+     [exec] [INFO] Patch Zip File : p27342434_122130_Generic.zip
+     [exec] [INFO] unzip p27342434_122130_Generic.zip ...
+     [exec] [INFO] Patching WLS 27342434... 
+     [exec] Oracle Interim Patch Installer version 13.9.2.0.0
+     [exec] Copyright (c) 2018, Oracle Corporation.  All rights reserved.
+     [exec] 
+     [exec] 
+     [exec] Oracle Home       : /x/web/gops/oracle/product/wl12213
+     [exec] Central Inventory : /x/web/gops/oracle/oraInventory
+     [exec]    from           : /x/web/gops/oracle/product/wl12213/oraInst.loc
+     [exec] OPatch version    : 13.9.2.0.0
+     [exec] OUI version       : 13.9.2.0.0
+     [exec] Log file location : /x/web/gops/oracle/product/wl12213/cfgtoollogs/opatch/opatch2018-10-25_05-02-36AM_1.log
+     [exec] 
+     [exec] 
+     [exec] OPatch detects the Middleware Home as "/x/web/gops/oracle/product/wl12213"
+     [exec] 
+     [exec] Verifying environment and performing prerequisite checks...
+     [exec] OPatch continues with these patches:   27342434  
+     [exec] 
+     [exec] Do you want to proceed? [y|n]
+     [exec] Y (auto-answered by -silent)
+     [exec] User Responded with: Y
+     [exec] All checks passed.
+     [exec] 
+     [exec] Please shutdown Oracle instances running out of this ORACLE_HOME on the local system.
+     [exec] (Oracle Home = '/x/web/gops/oracle/product/wl12213')
+     [exec] 
+     [exec] 
+     [exec] Is the local system ready for patching? [y|n]
+     [exec] Y (auto-answered by -silent)
+     [exec] User Responded with: Y
+     [exec] Backing up files...
+     [exec] Applying interim patch '27342434' to OH '/x/web/gops/oracle/product/wl12213'
+     [exec] ApplySession: Optional component(s) [ oracle.fmwconfig.common.wls.shared, 12.2.1.3.0 ]  not present in the Oracle Home or a higher version is found.
+     [exec] 
+     [exec] Patching component oracle.webservices.base, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.libraries, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.libraries, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.libraries, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.webservices.orawsdl, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.jrf.tenancy.common.sharedlib, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.fmwconfig.common.wls.shared.internal, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.rcu, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.rcu, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.common.cam.wlst, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.security.core.sharedlib, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.webservices.wls, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.webservices.wls, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.webservices.wls, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.commons.fileupload.commons.fileupload, 1.3.2.0.0...
+     [exec] 
+     [exec] Patching component oracle.commons.fileupload.commons.fileupload, 1.3.2.0.0...
+     [exec] 
+     [exec] Patching component oracle.wls.core.app.server, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.core.app.server, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.core.app.server, 12.2.1.3.0...
+     [exec] 
+     [exec] Patching component oracle.wls.admin.console.en, 12.2.1.3.0...
+     [exec] Patch 27342434 successfully applied.
+     [exec] N-Apply process is complete. No bug fixes are lost.
+     [exec] Log file location: /x/web/gops/oracle/product/wl12213/cfgtoollogs/opatch/opatch2018-10-25_05-02-36AM_1.log
+     [exec] 
+     [exec] OPatch succeeded.
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/create_domain.py
+ INFO  OS is not certified.
+Linux version must be above 5
+ INFO  Group website Exists
+ INFO  User website Exists
+ INFO  Creating domain: /x/web/gops/oracle/config/aserver/petkana
+ INFO  Trying to connect to the Weblogic Admin Server at : 
+ Connecting to t3://10.57.93.72:19101 with userid gopsadmin ...
+INFO  No server is running at t3://10.57.93.72:19101, the script will start a new server
+ INFO  Starting a brand new Weblogic Admin Server at t3://10.57.93.72:19101 with server name adminserver_kana
+
+ Starting weblogic server ...
+WLST-WLS-1540469063846: Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+WLST-WLS-1540469063846: Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=512m; support was removed in 8.0
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:24 AM PDT> <Info> <Security> <BEA-090905> <Disabling the CryptoJ JCE Provider self-integrity check for better startup performance. To enable this check, specify -Dweblogic.security.allowCryptoJDefaultJCEVerification=true.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:24 AM PDT> <Info> <Security> <BEA-090906> <Changing the default Random Number Generator in RSA CryptoJ from ECDRBG128 to HMACDRBG. To disable this change, specify -Dweblogic.security.allowCryptoJDefaultPRNG=true.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:26 AM PDT> <Info> <WebLogicServer> <BEA-000377> <Starting WebLogic Server with Java HotSpot(TM) 64-Bit Server VM Version 25.171-b11 from Oracle Corporation.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:27 AM PDT> <Info> <Management> <BEA-140013> </x/web/gops/oracle/config/aserver/petkana/config not found> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:27 AM PDT> <Info> <Management> <BEA-141254> <Generating new domain directory in /x/web/gops/oracle/config/aserver/petkana.> 
+.......WLST-WLS-1540469063846: <Oct 25, 2018 5:04:46 AM PDT> <Warning> <Security> <BEA-090960> <The servers SSL configuration is not available. There will potentially be SSL handshake failures.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:46 AM PDT> <Warning> <Security> <BEA-090924> <JSSE has been selected by default, since the SSLMBean is not available.> 
+.WLST-WLS-1540469063846: <Oct 25, 2018 5:04:48 AM PDT> <Info> <Management> <BEA-141255> <Domain generation completed in 21,340 milliseconds.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:48 AM PDT> <Info> <Management> <BEA-141107> <Version: WebLogic Server 12.2.1.3.0 Thu Aug 17 13:39:49 PDT 2017 1882952> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:48 AM PDT> <Info> <RCM> <BEA-2165021> <"ResourceManagement" is not enabled in this JVM. Enable "ResourceManagement" to use the WebLogic Server "Resource Consumption Management" feature. To enable "ResourceManagement", you must specify the following JVM options in the WebLogic Server instance in which the JVM runs: -XX:+UnlockCommercialFeatures -XX:+ResourceManagement.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:51 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to STARTING.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:51 AM PDT> <Info> <WorkManager> <BEA-002900> <Initializing self-tuning thread pool.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:51 AM PDT> <Info> <WorkManager> <BEA-002942> <CMM memory level becomes 0. Setting standby thread pool size to 256.> 
+.WLST-WLS-1540469063846: <Oct 25, 2018 5:04:52,955 AM PDT> <Notice> <Security> <BEA-090946> <Security pre-initializing using security realm: myrealm> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:53,061 AM PDT> <Notice> <Log Management> <BEA-170019> <The server log file weblogic.logging.FileStreamHandler instance=2101868790
+WLST-WLS-1540469063846: Current log file=/x/web/gops/oracle/config/aserver/petkana/servers/adminserver_kana/logs/adminserver_kana.log
+WLST-WLS-1540469063846: Rotation dir=/x/web/gops/oracle/config/aserver/petkana/servers/adminserver_kana/logs
+WLST-WLS-1540469063846:  is opened. All server side log events will be written to this file.> 
+.WLST-WLS-1540469063846: <Oct 25, 2018 5:04:55,067 AM PDT> <Notice> <Security> <BEA-090947> <Security post-initializing using security realm: myrealm> 
+.WLST-WLS-1540469063846: <Oct 25, 2018 5:04:57,463 AM PDT> <Notice> <Security> <BEA-090082> <Security initialized using administrative security realm: myrealm> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:58,232 AM PDT> <Notice> <JMX> <BEA-149512> <JMX Connector Server started at service:jmx:iiop://10.57.93.72:19101/jndi/weblogic.management.mbeanservers.runtime.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:58,881 AM PDT> <Notice> <JMX> <BEA-149512> <JMX Connector Server started at service:jmx:iiop://10.57.93.72:19101/jndi/weblogic.management.mbeanservers.edit.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:04:58,907 AM PDT> <Notice> <JMX> <BEA-149512> <JMX Connector Server started at service:jmx:iiop://10.57.93.72:19101/jndi/weblogic.management.mbeanservers.domainruntime.> 
+.WLST-WLS-1540469063846: INFO  HV000001: Hibernate Validator 5.1.3.Final
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:02,122 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to STANDBY.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:02,124 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to STARTING.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:02,280 AM PDT> <Notice> <Log Management> <BEA-170036> <The Logging monitoring service timer has started to check for logged message counts every 30 seconds.> 
+.WLST-WLS-1540469063846: <Oct 25, 2018 5:05:02,895 AM PDT> <Notice> <Log Management> <BEA-170027> <The server has successfully established a connection with the Domain level Diagnostic Service.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,521 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to ADMIN.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,652 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to RESUMING.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,776 AM PDT> <Notice> <WebLogicServer> <BEA-000331> <Started the WebLogic Server Administration Server "adminserver_kana" for domain "petkana" running in development mode.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,777 AM PDT> <Notice> <Server> <BEA-002613> <Channel "Default" is now listening on 10.57.93.72:19101 for protocols iiop, t3, ldap, snmp, http.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,779 AM PDT> <Notice> <Server> <BEA-002613> <Channel "Default" is now listening on 10.57.93.72:19101 for protocols iiop, t3, ldap, snmp, http.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,824 AM PDT> <Notice> <WebLogicServer> <BEA-000360> <The server started in RUNNING mode.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:03,850 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to RUNNING.> 
+Server started successfully.
+INFO  Started Server. Trying to connect to the Weblogic Admin Server at : t3://10.57.93.72:19101
+
+ Connecting to t3://10.57.93.72:19101 with userid gopsadmin ...
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:10,003 AM PDT> <Notice> <JMX> <BEA-149535> <JMX Resiliency Activity Server=adminserver_kana : Initializing callbacks> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:10,010 AM PDT> <Notice> <JMX> <BEA-149535> <JMX Resiliency Activity Server=adminserver_kana : Added MBeanServerConnection in DomainRuntimeServiceMBean > 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:10,013 AM PDT> <Notice> <JMX> <BEA-149535> <JMX Resiliency Activity Server=adminserver_kana : Callback is done> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:10,021 AM PDT> <Notice> <JMX> <BEA-149535> <JMX Resiliency Activity Server=adminserver_kana : Connection already exists for the server. Did not attempt to connect to the server> 
+WLST-WLS-1540469063846:  INFO  Refreshing com.bea.core.repackaged.springframework.context.support.GenericApplicationContext@2e723abd: startup date [Thu Oct 25 05:05:10 PDT 2018]; root of context hierarchy
+Successfully connected to Admin Server "adminserver_kana" that belongs to domain "petkana".
+
+Warning: An insecure protocol was used to connect to the server. 
+To ensure on-the-wire security, the SSL port or Admin port should be used instead.
+INFO  
+ INFO  Successfully connected to the Weblogic Admin Server at : t3://10.57.93.72:19101
+
+ Enrolling this machine with the domain directory at /x/web/gops/oracle/config/aserver/petkana ...
+WLST-WLS-1540469063846:  INFO  Refreshing com.bea.core.repackaged.springframework.context.support.GenericApplicationContext@5bf36381: startup date [Thu Oct 25 05:05:14 PDT 2018]; root of context hierarchy
+Successfully enrolled this machine with the domain directory at /x/web/gops/oracle/config/aserver/petkana.
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:20,630 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ProductionModeEnabled on weblogic.management.configuration.DomainMBeanImpl@2857d8d7([petkana]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:20,633 AM PDT> <Warning> <Management> <BEA-141238> <A non-dynamic change has been made which affects the server adminserver_kana. This server must be rebooted in order to consume this change.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:20,634 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ProductionModeEnabled on weblogic.management.configuration.DomainMBeanImpl@2857d8d7([petkana]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting SSL configuration for Weblogic Admin Server...
+
+ INFO  
+Successfully set the SSL configuration for Weblogic Admin Server...
+
+ INFO  Successfully created a cluster with name cluster-kana-L1 in the domain...
+
+ INFO  A Unix machine with name gcp2cpp084 does not exist in the domain. Creating a new Unix machine ...
+
+ INFO  Successfully set the listen address for NodeManager of machine : gcp2cpp084
+
+ INFO  Successfully set the properties for machine with name gcp2cpp084...
+
+ INFO  Creating managed server : gcp2cpp084_kana_L1_1 on host : gcp2cpp084
+
+ INFO  Checking if a managed server : gcp2cpp084_kana_L1_1 exists in the domain ...
+
+ INFO  Successfully created a managed server with name gcp2cpp084_kana_L1_1 in the domain...
+
+ INFO  Creating network access point : clusterChannel_kana_L1 for server : gcp2cpp084_kana_L1_1
+
+ INFO  Successfully created a network access point by name : clusterChannel_kana_L1 for the managed server : gcp2cpp084_kana_L1_1...
+
+ INFO  Setting attributes for cluster channel : clusterChannel_kana_L1 on server : gcp2cpp084_kana_L1_1
+
+ INFO  Setting attributes for cluster : cluster-kana-L1
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:23,581 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ClusterBroadcastChannel on weblogic.management.configuration.ClusterMBeanImpl@79c5c445([petkana]/Clusters[cluster-kana-L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:23,583 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ClusterBroadcastChannel on weblogic.management.configuration.ClusterMBeanImpl@79c5c445([petkana]/Clusters[cluster-kana-L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Creating managed server : gcp2cpp084_kana_L1_1 to cluster : cluster-kana-L1
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L1_1 to cluster : cluster-kana-L1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:24,013 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a3788bb([petkana]/Servers[gcp2cpp084_kana_L1_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:24,015 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a3788bb([petkana]/Servers[gcp2cpp084_kana_L1_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting attributes for migratable target for server : gcp2cpp084_kana_L1_1
+
+ INFO  Setting attributes for system generated default migratable target for server : gcp2cpp084_kana_L1_1
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L1_1 to host : gcp2cpp084
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L1_1 to machine : gcp2cpp084 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:25,070 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a3788bb([petkana]/Servers[gcp2cpp084_kana_L1_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:25,071 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a3788bb([petkana]/Servers[gcp2cpp084_kana_L1_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the HTTP configuration for : gcp2cpp084_kana_L1_1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:25,381 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a3788bb([petkana]/Servers[gcp2cpp084_kana_L1_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:25,383 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a3788bb([petkana]/Servers[gcp2cpp084_kana_L1_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the SSL configuration for managed server : gcp2cpp084_kana_L1_1
+
+ INFO  Setting the SSL configuration for : gcp2cpp084_kana_L1_1 ...
+
+ INFO  Setting the logging file properties for : gcp2cpp084_kana_L1_1 ...
+
+ INFO  Setting the logging file properties for the web server on : gcp2cpp084_kana_L1_1 ...
+
+ INFO  Setting the server start configuration for managed server : gcp2cpp084_kana_L1_1
+
+ INFO  Setting the server start arguments for : gcp2cpp084_kana_L1_1 ...
+
+ INFO  Creating JMS server : PRJMS_Server_kana_L1_084_1 on managed server gcp2cpp084_kana_L1_1
+
+ INFO  A JMS server with name PRJMS_Server_kana_L1_084_1 does not exist in the domain. Creating a new JMS server ...
+
+ INFO  Setting the properties for the JMS server : PRJMS_Server_kana_L1_084_1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:27,547 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@fdc0b339([petkana]/JMSServers[PRJMS_Server_kana_L1_084_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:27,548 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@fdc0b339([petkana]/JMSServers[PRJMS_Server_kana_L1_084_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  A JMS system resource with name PRJMS_Module_kana_L1 does not exist in the domain. Creating a new JMS system resource ...
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L1_084_1_Conn does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L1_084_1 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L1_084_1_Conn
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L1_084_1_Topic does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L1_084_1 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L1_084_1_Topic
+
+ INFO  Creating subdeployment : PRAsyncConnectionFactory_kana_L1_084_1 and targetting it to : PRJMS_Module_kana_L1
+
+ INFO  A connection factory with name PRAsyncConnectionFactory_kana_L1_084_1 does not exist in the domain. Creating a new connection factory ...
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L1_084_1
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L1_084_1
+
+ INFO  A topic with name PRAsyncTopic_kana_L1_084_1 does not exist in the domain. Creating a new topic ...
+
+ INFO  Setting properties for topic : PRAsyncTopic_kana_L1_084_1
+
+ INFO  A JDBC data source with name PegaRules_kana_L1 does not exist in the domain. Creating a new JDBC data source ...
+ INFO  Setting the properties for JDBC data source : PegaRules_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/PegaRules_kana_L1/JDBCResource/PegaRules_kana_L1/JDBCDriverParams/PegaRules_kana_L1/Properties/PegaRules_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : PegaRules_kana_L1
+
+ INFO  A JDBC data source with name GemsDS_kana_L1 does not exist in the domain. Creating a new JDBC data source ...
+ INFO  Setting the properties for JDBC data source : GemsDS_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/GemsDS_kana_L1/JDBCResource/GemsDS_kana_L1/JDBCDriverParams/GemsDS_kana_L1/Properties/GemsDS_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : GemsDS_kana_L1
+
+ INFO  A JDBC data source with name GopsDS_kana_L1 does not exist in the domain. Creating a new JDBC data source ...
+ INFO  Setting the properties for JDBC data source : GopsDS_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/GopsDS_kana_L1/JDBCResource/GopsDS_kana_L1/JDBCDriverParams/GopsDS_kana_L1/Properties/GopsDS_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : GopsDS_kana_L1
+
+ INFO  Creating managed server : gcp2cpp084_kana_L1_2 on host : gcp2cpp084
+
+ INFO  Checking if a managed server : gcp2cpp084_kana_L1_2 exists in the domain ...
+
+ INFO  Successfully created a managed server with name gcp2cpp084_kana_L1_2 in the domain...
+
+ INFO  Creating network access point : clusterChannel_kana_L1 for server : gcp2cpp084_kana_L1_2
+
+ INFO  Successfully created a network access point by name : clusterChannel_kana_L1 for the managed server : gcp2cpp084_kana_L1_2...
+
+ INFO  Setting attributes for cluster channel : clusterChannel_kana_L1 on server : gcp2cpp084_kana_L1_2
+
+ INFO  Setting attributes for cluster : cluster-kana-L1
+
+ INFO  Creating managed server : gcp2cpp084_kana_L1_2 to cluster : cluster-kana-L1
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L1_2 to cluster : cluster-kana-L1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:35,098 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a3788bc([petkana]/Servers[gcp2cpp084_kana_L1_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:35,100 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a3788bc([petkana]/Servers[gcp2cpp084_kana_L1_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting attributes for migratable target for server : gcp2cpp084_kana_L1_2
+
+ INFO  Setting attributes for system generated default migratable target for server : gcp2cpp084_kana_L1_2
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L1_2 to host : gcp2cpp084
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L1_2 to machine : gcp2cpp084 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:35,900 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a3788bc([petkana]/Servers[gcp2cpp084_kana_L1_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:35,902 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a3788bc([petkana]/Servers[gcp2cpp084_kana_L1_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the HTTP configuration for : gcp2cpp084_kana_L1_2 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:36,147 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a3788bc([petkana]/Servers[gcp2cpp084_kana_L1_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:36,148 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a3788bc([petkana]/Servers[gcp2cpp084_kana_L1_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the SSL configuration for managed server : gcp2cpp084_kana_L1_2
+
+ INFO  Setting the SSL configuration for : gcp2cpp084_kana_L1_2 ...
+
+ INFO  Setting the logging file properties for : gcp2cpp084_kana_L1_2 ...
+
+ INFO  Setting the logging file properties for the web server on : gcp2cpp084_kana_L1_2 ...
+
+ INFO  Setting the server start configuration for managed server : gcp2cpp084_kana_L1_2
+
+ INFO  Setting the server start arguments for : gcp2cpp084_kana_L1_2 ...
+
+ INFO  Creating JMS server : PRJMS_Server_kana_L1_084_2 on managed server gcp2cpp084_kana_L1_2
+
+ INFO  A JMS server with name PRJMS_Server_kana_L1_084_2 does not exist in the domain. Creating a new JMS server ...
+
+ INFO  Setting the properties for the JMS server : PRJMS_Server_kana_L1_084_2 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:37,641 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@fdc0b326([petkana]/JMSServers[PRJMS_Server_kana_L1_084_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:37,642 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@fdc0b326([petkana]/JMSServers[PRJMS_Server_kana_L1_084_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  A JMS System resource with name PRJMS_Module_kana_L1 already exists in the domain. Bypassing creating it again ...
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L1_084_2_Conn does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L1_084_2 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L1_084_2_Conn
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L1_084_2_Topic does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L1_084_2 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L1_084_2_Topic
+
+ INFO  Creating subdeployment : PRAsyncConnectionFactory_kana_L1_084_2 and targetting it to : PRJMS_Module_kana_L1
+
+ INFO  A connection factory with name PRAsyncConnectionFactory_kana_L1_084_2 does not exist in the domain. Creating a new connection factory ...
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L1_084_2
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L1_084_2
+
+ INFO  A topic with name PRAsyncTopic_kana_L1_084_2 does not exist in the domain. Creating a new topic ...
+
+ INFO  Setting properties for topic : PRAsyncTopic_kana_L1_084_2
+
+ INFO  A JDBC resource with name PegaRules_kana_L1 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : PegaRules_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/PegaRules_kana_L1/JDBCResource/PegaRules_kana_L1/JDBCDriverParams/PegaRules_kana_L1/Properties/PegaRules_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : PegaRules_kana_L1
+
+ INFO  A JDBC resource with name GemsDS_kana_L1 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : GemsDS_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/GemsDS_kana_L1/JDBCResource/GemsDS_kana_L1/JDBCDriverParams/GemsDS_kana_L1/Properties/GemsDS_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : GemsDS_kana_L1
+
+ INFO  A JDBC resource with name GopsDS_kana_L1 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : GopsDS_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/GopsDS_kana_L1/JDBCResource/GopsDS_kana_L1/JDBCDriverParams/GopsDS_kana_L1/Properties/GopsDS_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : GopsDS_kana_L1
+
+ INFO  Successfully created a cluster with name cluster-kana-L2 in the domain...
+
+ INFO  A Unix machine with name gcp2cpp084 already exists in the domain. Bypassing creating it again ...
+
+ INFO  Successfully set the listen address for NodeManager of machine : gcp2cpp084
+
+ INFO  Successfully set the properties for machine with name gcp2cpp084...
+
+ INFO  Creating managed server : gcp2cpp084_kana_L2_1 on host : gcp2cpp084
+
+ INFO  Checking if a managed server : gcp2cpp084_kana_L2_1 exists in the domain ...
+
+ INFO  Successfully created a managed server with name gcp2cpp084_kana_L2_1 in the domain...
+
+ INFO  Creating network access point : clusterChannel_kana_L2 for server : gcp2cpp084_kana_L2_1
+
+ INFO  Successfully created a network access point by name : clusterChannel_kana_L2 for the managed server : gcp2cpp084_kana_L2_1...
+
+ INFO  Setting attributes for cluster channel : clusterChannel_kana_L2 on server : gcp2cpp084_kana_L2_1
+
+ INFO  Setting attributes for cluster : cluster-kana-L2
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:43,900 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ClusterBroadcastChannel on weblogic.management.configuration.ClusterMBeanImpl@79c5c444([petkana]/Clusters[cluster-kana-L2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:43,901 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ClusterBroadcastChannel on weblogic.management.configuration.ClusterMBeanImpl@79c5c444([petkana]/Clusters[cluster-kana-L2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Creating managed server : gcp2cpp084_kana_L2_1 to cluster : cluster-kana-L2
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L2_1 to cluster : cluster-kana-L2 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:44,134 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a378c7c([petkana]/Servers[gcp2cpp084_kana_L2_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:44,136 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a378c7c([petkana]/Servers[gcp2cpp084_kana_L2_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting attributes for migratable target for server : gcp2cpp084_kana_L2_1
+
+ INFO  Setting attributes for system generated default migratable target for server : gcp2cpp084_kana_L2_1
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L2_1 to host : gcp2cpp084
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L2_1 to machine : gcp2cpp084 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:44,853 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a378c7c([petkana]/Servers[gcp2cpp084_kana_L2_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:44,855 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a378c7c([petkana]/Servers[gcp2cpp084_kana_L2_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the HTTP configuration for : gcp2cpp084_kana_L2_1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:45,065 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a378c7c([petkana]/Servers[gcp2cpp084_kana_L2_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:45,066 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a378c7c([petkana]/Servers[gcp2cpp084_kana_L2_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the SSL configuration for managed server : gcp2cpp084_kana_L2_1
+
+ INFO  Setting the SSL configuration for : gcp2cpp084_kana_L2_1 ...
+
+ INFO  Setting the logging file properties for : gcp2cpp084_kana_L2_1 ...
+
+ INFO  Setting the logging file properties for the web server on : gcp2cpp084_kana_L2_1 ...
+
+ INFO  Setting the server start configuration for managed server : gcp2cpp084_kana_L2_1
+
+ INFO  Setting the server start arguments for : gcp2cpp084_kana_L2_1 ...
+
+ INFO  Creating JMS server : PRJMS_Server_kana_L2_084_1 on managed server gcp2cpp084_kana_L2_1
+
+ INFO  A JMS server with name PRJMS_Server_kana_L2_084_1 does not exist in the domain. Creating a new JMS server ...
+
+ INFO  Setting the properties for the JMS server : PRJMS_Server_kana_L2_084_1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:46,458 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@32da4866([petkana]/JMSServers[PRJMS_Server_kana_L2_084_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:46,460 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@32da4866([petkana]/JMSServers[PRJMS_Server_kana_L2_084_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  A JMS system resource with name PRJMS_Module_kana_L2 does not exist in the domain. Creating a new JMS system resource ...
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L2_084_1_Conn does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L2_084_1 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L2_084_1_Conn
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L2_084_1_Topic does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L2_084_1 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L2_084_1_Topic
+
+ INFO  Creating subdeployment : PRAsyncConnectionFactory_kana_L2_084_1 and targetting it to : PRJMS_Module_kana_L2
+
+ INFO  A connection factory with name PRAsyncConnectionFactory_kana_L2_084_1 does not exist in the domain. Creating a new connection factory ...
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L2_084_1
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L2_084_1
+
+ INFO  A topic with name PRAsyncTopic_kana_L2_084_1 does not exist in the domain. Creating a new topic ...
+
+ INFO  Setting properties for topic : PRAsyncTopic_kana_L2_084_1
+
+ INFO  A JDBC data source with name PegaRules_kana_L2 does not exist in the domain. Creating a new JDBC data source ...
+ INFO  Setting the properties for JDBC data source : PegaRules_kana_L2
+ INFO  Creating property by name : user under /JDBCSystemResources/PegaRules_kana_L2/JDBCResource/PegaRules_kana_L2/JDBCDriverParams/PegaRules_kana_L2/Properties/PegaRules_kana_L2 ...
+
+ INFO  Getting a reference to : cluster-kana-L2 so that it can be set as a target for data source : PegaRules_kana_L2
+
+ INFO  A JDBC data source with name GemsDS_kana_L2 does not exist in the domain. Creating a new JDBC data source ...
+ INFO  Setting the properties for JDBC data source : GemsDS_kana_L2
+ INFO  Creating property by name : user under /JDBCSystemResources/GemsDS_kana_L2/JDBCResource/GemsDS_kana_L2/JDBCDriverParams/GemsDS_kana_L2/Properties/GemsDS_kana_L2 ...
+
+ INFO  Getting a reference to : cluster-kana-L2 so that it can be set as a target for data source : GemsDS_kana_L2
+
+ INFO  A JDBC data source with name GopsDS_kana_L2 does not exist in the domain. Creating a new JDBC data source ...
+ INFO  Setting the properties for JDBC data source : GopsDS_kana_L2
+ INFO  Creating property by name : user under /JDBCSystemResources/GopsDS_kana_L2/JDBCResource/GopsDS_kana_L2/JDBCDriverParams/GopsDS_kana_L2/Properties/GopsDS_kana_L2 ...
+
+ INFO  Getting a reference to : cluster-kana-L2 so that it can be set as a target for data source : GopsDS_kana_L2
+
+ INFO  Creating managed server : gcp2cpp084_kana_L2_2 on host : gcp2cpp084
+
+ INFO  Checking if a managed server : gcp2cpp084_kana_L2_2 exists in the domain ...
+
+ INFO  Successfully created a managed server with name gcp2cpp084_kana_L2_2 in the domain...
+
+ INFO  Creating network access point : clusterChannel_kana_L2 for server : gcp2cpp084_kana_L2_2
+
+ INFO  Successfully created a network access point by name : clusterChannel_kana_L2 for the managed server : gcp2cpp084_kana_L2_2...
+
+ INFO  Setting attributes for cluster channel : clusterChannel_kana_L2 on server : gcp2cpp084_kana_L2_2
+
+ INFO  Setting attributes for cluster : cluster-kana-L2
+
+ INFO  Creating managed server : gcp2cpp084_kana_L2_2 to cluster : cluster-kana-L2
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L2_2 to cluster : cluster-kana-L2 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:52,405 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a378c7d([petkana]/Servers[gcp2cpp084_kana_L2_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:52,407 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4a378c7d([petkana]/Servers[gcp2cpp084_kana_L2_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting attributes for migratable target for server : gcp2cpp084_kana_L2_2
+
+ INFO  Setting attributes for system generated default migratable target for server : gcp2cpp084_kana_L2_2
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L2_2 to host : gcp2cpp084
+
+ INFO  Assigning managed server : gcp2cpp084_kana_L2_2 to machine : gcp2cpp084 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:53,101 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a378c7d([petkana]/Servers[gcp2cpp084_kana_L2_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:53,103 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4a378c7d([petkana]/Servers[gcp2cpp084_kana_L2_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the HTTP configuration for : gcp2cpp084_kana_L2_2 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:54,131 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a378c7d([petkana]/Servers[gcp2cpp084_kana_L2_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:54,132 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4a378c7d([petkana]/Servers[gcp2cpp084_kana_L2_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the SSL configuration for managed server : gcp2cpp084_kana_L2_2
+
+ INFO  Setting the SSL configuration for : gcp2cpp084_kana_L2_2 ...
+
+ INFO  Setting the logging file properties for : gcp2cpp084_kana_L2_2 ...
+
+ INFO  Setting the logging file properties for the web server on : gcp2cpp084_kana_L2_2 ...
+
+ INFO  Setting the server start configuration for managed server : gcp2cpp084_kana_L2_2
+
+ INFO  Setting the server start arguments for : gcp2cpp084_kana_L2_2 ...
+
+ INFO  Creating JMS server : PRJMS_Server_kana_L2_084_2 on managed server gcp2cpp084_kana_L2_2
+
+ INFO  A JMS server with name PRJMS_Server_kana_L2_084_2 does not exist in the domain. Creating a new JMS server ...
+
+ INFO  Setting the properties for the JMS server : PRJMS_Server_kana_L2_084_2 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:05:55,561 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@32da4867([petkana]/JMSServers[PRJMS_Server_kana_L2_084_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:05:55,562 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@32da4867([petkana]/JMSServers[PRJMS_Server_kana_L2_084_2]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  A JMS System resource with name PRJMS_Module_kana_L2 already exists in the domain. Bypassing creating it again ...
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L2_084_2_Conn does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L2_084_2 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L2_084_2_Conn
+
+ INFO  A subdeployment with name PRJMSSubdeployment_kana_L2_084_2_Topic does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_kana_L2_084_2 so that it can be set as a target for sub deployment : PRJMSSubdeployment_kana_L2_084_2_Topic
+
+ INFO  Creating subdeployment : PRAsyncConnectionFactory_kana_L2_084_2 and targetting it to : PRJMS_Module_kana_L2
+
+ INFO  A connection factory with name PRAsyncConnectionFactory_kana_L2_084_2 does not exist in the domain. Creating a new connection factory ...
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L2_084_2
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_kana_L2_084_2
+
+ INFO  A topic with name PRAsyncTopic_kana_L2_084_2 does not exist in the domain. Creating a new topic ...
+
+ INFO  Setting properties for topic : PRAsyncTopic_kana_L2_084_2
+
+ INFO  A JDBC resource with name PegaRules_kana_L2 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : PegaRules_kana_L2
+ INFO  Creating property by name : user under /JDBCSystemResources/PegaRules_kana_L2/JDBCResource/PegaRules_kana_L2/JDBCDriverParams/PegaRules_kana_L2/Properties/PegaRules_kana_L2 ...
+
+ INFO  Getting a reference to : cluster-kana-L2 so that it can be set as a target for data source : PegaRules_kana_L2
+
+ INFO  A JDBC resource with name GemsDS_kana_L2 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : GemsDS_kana_L2
+ INFO  Creating property by name : user under /JDBCSystemResources/GemsDS_kana_L2/JDBCResource/GemsDS_kana_L2/JDBCDriverParams/GemsDS_kana_L2/Properties/GemsDS_kana_L2 ...
+
+ INFO  Getting a reference to : cluster-kana-L2 so that it can be set as a target for data source : GemsDS_kana_L2
+
+ INFO  A JDBC resource with name GopsDS_kana_L2 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : GopsDS_kana_L2
+ INFO  Creating property by name : user under /JDBCSystemResources/GopsDS_kana_L2/JDBCResource/GopsDS_kana_L2/JDBCDriverParams/GopsDS_kana_L2/Properties/GopsDS_kana_L2 ...
+
+ INFO  Getting a reference to : cluster-kana-L2 so that it can be set as a target for data source : GopsDS_kana_L2
+
+ INFO  A cluster with name cluster-kana-L1 already exists in the domain. Bypassing creating it again ...
+
+ INFO  A Unix machine with name gcp2cpp084 already exists in the domain. Bypassing creating it again ...
+
+ INFO  Successfully set the listen address for NodeManager of machine : gcp2cpp084
+
+ INFO  Successfully set the properties for machine with name gcp2cpp084...
+
+ INFO  Creating managed server : gcp2cpp084_service_kana_L1 on host : gcp2cpp084
+
+ INFO  Checking if a managed server : gcp2cpp084_service_kana_L1 exists in the domain ...
+
+ INFO  Successfully created a managed server with name gcp2cpp084_service_kana_L1 in the domain...
+
+ INFO  Creating network access point : clusterChannel_kana_L1 for server : gcp2cpp084_service_kana_L1
+
+ INFO  Successfully created a network access point by name : clusterChannel_kana_L1 for the managed server : gcp2cpp084_service_kana_L1...
+
+ INFO  Setting attributes for cluster channel : clusterChannel_kana_L1 on server : gcp2cpp084_service_kana_L1
+
+ INFO  Setting attributes for cluster : cluster-kana-L1
+
+ INFO  Creating managed server : gcp2cpp084_service_kana_L1 to cluster : cluster-kana-L1
+
+ INFO  Assigning managed server : gcp2cpp084_service_kana_L1 to cluster : cluster-kana-L1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:01,627 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4cb77bf([petkana]/Servers[gcp2cpp084_service_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:01,628 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Cluster on weblogic.management.configuration.ServerMBeanImpl@4cb77bf([petkana]/Servers[gcp2cpp084_service_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting attributes for migratable target for server : gcp2cpp084_service_kana_L1
+
+ INFO  Setting attributes for system generated default migratable target for server : gcp2cpp084_service_kana_L1
+
+ INFO  Assigning managed server : gcp2cpp084_service_kana_L1 to host : gcp2cpp084
+
+ INFO  Assigning managed server : gcp2cpp084_service_kana_L1 to machine : gcp2cpp084 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:02,364 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4cb77bf([petkana]/Servers[gcp2cpp084_service_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:02,366 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@4cb77bf([petkana]/Servers[gcp2cpp084_service_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the HTTP configuration for : gcp2cpp084_service_kana_L1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:02,585 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4cb77bf([petkana]/Servers[gcp2cpp084_service_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:02,587 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@4cb77bf([petkana]/Servers[gcp2cpp084_service_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the SSL configuration for managed server : gcp2cpp084_service_kana_L1
+
+ INFO  Setting the SSL configuration for : gcp2cpp084_service_kana_L1 ...
+
+ INFO  Setting the logging file properties for : gcp2cpp084_service_kana_L1 ...
+
+ INFO  Setting the logging file properties for the web server on : gcp2cpp084_service_kana_L1 ...
+
+ INFO  Setting the server start configuration for managed server : gcp2cpp084_service_kana_L1
+
+ INFO  Setting the server start arguments for : gcp2cpp084_service_kana_L1 ...
+
+ INFO  Creating JMS server : PRJMS_Server_Service_kana_L1_084_1 on managed server gcp2cpp084_service_kana_L1
+
+ INFO  A JMS server with name PRJMS_Server_Service_kana_L1_084_1 does not exist in the domain. Creating a new JMS server ...
+
+ INFO  Setting the properties for the JMS server : PRJMS_Server_Service_kana_L1_084_1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:04,416 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@67e251d3([petkana]/JMSServers[PRJMS_Server_Service_kana_L1_084_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:04,417 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ConsumptionPausedAtStartup on weblogic.management.configuration.JMSServerMBeanImpl@67e251d3([petkana]/JMSServers[PRJMS_Server_Service_kana_L1_084_1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  A JMS System resource with name PRJMS_Module_kana_L1 already exists in the domain. Bypassing creating it again ...
+
+ INFO  A subdeployment with name PRJMSSubdeployment_Service_kana_L1_084_1_Conn does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_Service_kana_L1_084_1 so that it can be set as a target for sub deployment : PRJMSSubdeployment_Service_kana_L1_084_1_Conn
+
+ INFO  A subdeployment with name PRJMSSubdeployment_Service_kana_L1_084_1_Topic does not exist in the domain. Creating a new sub deployment ...
+
+ INFO  Getting a reference to : PRJMS_Server_Service_kana_L1_084_1 so that it can be set as a target for sub deployment : PRJMSSubdeployment_Service_kana_L1_084_1_Topic
+
+ INFO  Creating subdeployment : PRAsyncConnectionFactory_Service_kana_L1_084_1 and targetting it to : PRJMS_Module_kana_L1
+
+ INFO  A connection factory with name PRAsyncConnectionFactory_Service_kana_L1_084_1 does not exist in the domain. Creating a new connection factory ...
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_Service_kana_L1_084_1
+
+ INFO  Setting properties for connection factory : PRAsyncConnectionFactory_Service_kana_L1_084_1
+
+ INFO  A topic with name PRAsyncTopic_Service_kana_L1_084_1 does not exist in the domain. Creating a new topic ...
+
+ INFO  Setting properties for topic : PRAsyncTopic_Service_kana_L1_084_1
+
+ INFO  A JDBC resource with name PegaRules_kana_L1 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : PegaRules_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/PegaRules_kana_L1/JDBCResource/PegaRules_kana_L1/JDBCDriverParams/PegaRules_kana_L1/Properties/PegaRules_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : PegaRules_kana_L1
+
+ INFO  A JDBC resource with name GemsDS_kana_L1 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : GemsDS_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/GemsDS_kana_L1/JDBCResource/GemsDS_kana_L1/JDBCDriverParams/GemsDS_kana_L1/Properties/GemsDS_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : GemsDS_kana_L1
+
+ INFO  A JDBC resource with name GopsDS_kana_L1 already exists in the domain. Bypassing creating it again ...
+ INFO  Setting the properties for JDBC data source : GopsDS_kana_L1
+ INFO  Creating property by name : user under /JDBCSystemResources/GopsDS_kana_L1/JDBCResource/GopsDS_kana_L1/JDBCDriverParams/GopsDS_kana_L1/Properties/GopsDS_kana_L1 ...
+
+ INFO  Getting a reference to : cluster-kana-L1 so that it can be set as a target for data source : GopsDS_kana_L1
+
+ INFO  A Unix machine with name gcp2cpp084 already exists in the domain. Bypassing creating it again ...
+
+ INFO  Successfully set the listen address for NodeManager of machine : gcp2cpp084
+
+ INFO  Successfully set the properties for machine with name gcp2cpp084...
+
+ INFO  Creating managed server : gcp2cpp084_sysmgmt_kana_L1 on host : gcp2cpp084
+
+ INFO  Checking if a managed server : gcp2cpp084_sysmgmt_kana_L1 exists in the domain ...
+
+ INFO  Successfully created a managed server with name gcp2cpp084_sysmgmt_kana_L1 in the domain...
+
+ INFO  Assigning managed server : gcp2cpp084_sysmgmt_kana_L1 to host : gcp2cpp084
+
+ INFO  Assigning managed server : gcp2cpp084_sysmgmt_kana_L1 to machine : gcp2cpp084 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:19,444 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@641bf118([petkana]/Servers[gcp2cpp084_sysmgmt_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:19,445 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute Machine on weblogic.management.configuration.ServerMBeanImpl@641bf118([petkana]/Servers[gcp2cpp084_sysmgmt_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the HTTP configuration for : gcp2cpp084_sysmgmt_kana_L1 ...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:19,678 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@641bf118([petkana]/Servers[gcp2cpp084_sysmgmt_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:19,679 AM PDT> <Warning> <Management> <BEA-141239> <The non-dynamic attribute ListenAddress on weblogic.management.configuration.ServerMBeanImpl@641bf118([petkana]/Servers[gcp2cpp084_sysmgmt_kana_L1]) has been changed. This may require redeploying or rebooting configured entities.> 
+INFO  Setting the SSL configuration for managed server : gcp2cpp084_sysmgmt_kana_L1
+
+ INFO  Setting the SSL configuration for : gcp2cpp084_sysmgmt_kana_L1 ...
+
+ INFO  Setting the logging file properties for : gcp2cpp084_sysmgmt_kana_L1 ...
+
+ INFO  Setting the logging file properties for the web server on : gcp2cpp084_sysmgmt_kana_L1 ...
+
+ INFO  Setting the server start configuration for managed server : gcp2cpp084_sysmgmt_kana_L1
+
+ INFO  Setting the server start arguments for : gcp2cpp084_sysmgmt_kana_L1 ...
+
+ INFO  Shutting down the Weblogic Admin Server so that it can be restarted with the new configuration...
+
+ WLST-WLS-1540469063846: <Oct 25, 2018 5:06:20,770 AM PDT> <Notice> <Server> <BEA-002638> <Force shutdown of adminserver_kana was issued remotely from 10.57.93.72.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:20,788 AM PDT> <Notice> <WebLogicServer> <BEA-000396> <Server shutdown has been requested by gopsadmin.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:20,810 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to FORCE_SUSPENDING.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:20,882 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to ADMIN.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:20,884 AM PDT> <Notice> <WebLogicServer> <BEA-000365> <Server state changed to FORCE_SHUTTING_DOWN.> 
+WLST-WLS-1540469063846:  Oct 25, 2018 5:06:20 AM weblogic.wsee.WseeCoreMessages logWseeServiceHalting
+WLST-WLS-1540469063846: INFO: The Wsee Service is halting
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:20,913 AM PDT> <Notice> <Log Management> <BEA-170037> <The log monitoring service timer has been stopped.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:21,274 AM PDT> <Warning> <JMX> <BEA-149513> <JMX Connector Server stopped at service:jmx:iiop://10.57.93.72:19101/jndi/weblogic.management.mbeanservers.edit.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:21,276 AM PDT> <Warning> <JMX> <BEA-149513> <JMX Connector Server stopped at service:jmx:iiop://10.57.93.72:19101/jndi/weblogic.management.mbeanservers.domainruntime.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:21,366 AM PDT> <Warning> <JMX> <BEA-149513> <JMX Connector Server stopped at service:jmx:iiop://10.57.93.72:19101/jndi/weblogic.management.mbeanservers.runtime.> 
+WLST-WLS-1540469063846: <Oct 25, 2018 5:06:21,415 AM PDT> <Notice> <JMX> <BEA-149535> <JMX Resiliency Activity Server=All Servers : Resolving connection list DomainRuntimeServiceMBean> 
+WLST-WLS-1540469063846: Stopped draining WLST-WLS-1540469063846
+WLST-WLS-1540469063846: Stopped draining WLST-WLS-1540469063846
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh populate.changeJDK.sh  stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.changeJDK.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/core/commands/ant/resources
+     [echo] creating changeJDKHome.sh script..
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/core/commands/ant/resources/changeJDKHome.sh
+ Below WLS Files are going to be Updated to reflect JDK symlink..
+/x/web/gops/oracle/config/aserver/petkana/bin/setNMJavaHome.sh
+/x/web/gops/oracle/config/aserver/petkana/bin/setDomainEnv.sh
+/x/web/gops/oracle/config/aserver/petkana/init-info/nodemanager-properties.xml
+/x/web/gops/oracle/config/aserver/petkana/init-info/domain-info.xml
+/x/web/gops/oracle/config/aserver/petkana/init-info/startscript.xml
+/x/web/gops/oracle/config/aserver/petkana/nodemanager/nodemanager.properties
+/x/web/gops/oracle/config/aserver/petkana/init-info/tokenValue.properties
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh populate.startadmin.sh stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.startadmin.sh:
+     [copy] Copying 1 file to /x/web/gops/oracle/config/aserver/petkana/bin
+     [echo] creating startadmin.sh script..
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh populate.startnm.sh stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.startnm.sh:
+     [copy] Copying 1 file to /x/web/gops/oracle/config/aserver/petkana/bin
+     [echo] creating startnodemgr.sh script..
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh populate.stopnm.sh stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.stopnm.sh:
+     [copy] Copying 1 file to /x/web/gops/oracle/config/aserver/petkana/bin
+     [echo] creating stopnodemgr.sh script..
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh populate.cache.sh stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.cache.sh:
+     [copy] Copying 1 file to /x/web/gops/oracle/config/aserver/petkana/bin
+     [echo] creating cache.sh script..
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh populate.pool_monitoring.sh stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.pool_monitoring.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring
+     [echo] creating pool_monitoring.sh script..
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh configure_nodemanager stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/weblogic-common.xml as ant target in build file: core/commands/ant/weblogic-common.xml
+ 
+validate.install.config:
+     [echo] Middleware Home: /x/web/gops/oracle/product/wl12213
+     [echo] Java Home: /x/web/gops/oracle/product/jdk
+     [echo] WebLogic Name: wlserver
+
+validate.admin.config:
+     [echo] WebLogic Domain Name: petkana
+     [echo] WebLogic Java Home: /x/web/gops/oracle/product/jdk
+     [echo] WebLogic Admin Domain Directory: /x/web/gops/oracle/config/aserver
+     [echo] WebLogic Manage Server Domain Directory: /x/web/gops/oracle/config/mserver
+     [echo] WebLogic Admin Server Name: adminserver_kana
+     [echo] WebLogic Admin Listener Address: gcp2cpp084.localhost
+     [echo] WebLogic Admin Listener Port: 19101
+
+configure_nodemanager:
+    [mkdir] Created dir: /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager
+     [copy] Copying 1 file to /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager
+     [copy] Copying 1 file to /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager
+     [copy] Copying 1 file to /x/web/gops/oracle/product/wl12213/wlserver/server/bin
+     [echo] Setting up nodemanager home /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager
+[propertyfile] Creating new property file: /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager/nodemanager.domains
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  Start the admin server using start script
+ INFO  The following start command will be used: /x/web/gops/oracle/config/aserver/petkana/bin/startadmin.sh
+ [INFO] adminserver_kana startup log: /x/web/gops/oracle/shared/petkana/logs/adminserver_kana/adminserver_kana_10-25-18-05:09:39.log 
+INFO  Just in case wait for 30 seconds.
+ INFO  false
+ INFO  Read Domain
+ INFO  Establishing connection to Admin Server at URL [t3://gcp2cpp084.localhost:19101], attempt #1
+ INFO  connecting..
+ INFO  false
+ INFO  
+ INFO  true
+ INFO  Deploying Application : prsysmgmt
+ <Oct 25, 2018 12:10:39 PM UTC> <Info> <J2EE Deployment SPI> <BEA-260121> <Initiating deploy operation for application, prsysmgmt [archive: /x/mytemp/asingh/wls_paas/platform/custom/resources/pega/prsysmgmt.war], to gcp2cpp084_sysmgmt_kana_L1 .> 
+INFO  Deploying Application : prhelp
+ <Oct 25, 2018 12:10:41 PM UTC> <Info> <J2EE Deployment SPI> <BEA-260121> <Initiating deploy operation for application, prhelp [archive: /x/mytemp/asingh/wls_paas/platform/custom/resources/pega/prhelp.war], to gcp2cpp084_sysmgmt_kana_L1 .> 
+INFO  Already Connected with Admin Server
+ Creating the key file can reduce the security of your system if it is not kept in a secured location after it is created. Creating new key...
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh create_user stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/create_user.py
+ false
+Read Domain
+connecting..
+false
+INFO  Establishing connection to Admin Server at URL [t3://gcp2cpp084.localhost:19101], attempt #1
+ Connecting to t3://gcp2cpp084.localhost:19101 with userid gopsadmin ...
+Successfully connected to Admin Server "adminserver_kana" that belongs to domain "petkana".
+
+Warning: An insecure protocol was used to connect to the server. 
+To ensure on-the-wire security, the SSL port or Admin port should be used instead.
+
+true
+INFO  Creating a user : gopsuser. Authenticator is DefaultAuthenticator
+ INFO  Adding a user : gopsuser to group Operators. Authenticator is DefaultAuthenticator
+ Created user successfully
+INFO  Done adding a user
+ INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh create_NetworkChannel stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/create_NetworkChannel.py
+ false
+Read Domain
+INFO  Establishing connection to Admin Server at URL [t3://gcp2cpp084.localhost:19101], attempt #1
+ connecting..
+false
+Connecting to t3://gcp2cpp084.localhost:19101 with userid gopsadmin ...
+Successfully connected to Admin Server "adminserver_kana" that belongs to domain "petkana".
+
+Warning: An insecure protocol was used to connect to the server. 
+To ensure on-the-wire security, the SSL port or Admin port should be used instead.
+
+true
+Starting an edit session for making changes to the Weblogic configuration
+
+<Error> Caught exception in createNetworkChannelJVM
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh create_mserver_domain stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/create_mserver_domain.py
+ connecting..
+false
+INFO  Establishing connection to Admin Server at URL [t3://gcp2cpp084.localhost:19101], attempt #1
+ Connecting to t3://gcp2cpp084.localhost:19101 with userid gopsadmin ...
+Successfully connected to Admin Server "adminserver_kana" that belongs to domain "petkana".
+
+Warning: An insecure protocol was used to connect to the server. 
+To ensure on-the-wire security, the SSL port or Admin port should be used instead.
+
+true
+Writing domain to a template.
+/x/mytemp/asingh/wls_paas/platform/custom/resources/templates/petkana.jar
+Location changed to domainConfig tree. This is a read-only tree 
+with DomainMBean as the root MBean. 
+For more help, use help('domainConfig')
+
+
+Disconnected from weblogic server: adminserver_kana
+Loading the template./x/mytemp/asingh/wls_paas/platform/custom/resources/templates/petkana.jar
+Configuring Nodemanager.
+Writing Domain Configuration.
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ Managed Domain built successfully.
+done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh domain_monitoring stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/domain_monitoring.py
+ false
+Read Domain
+INFO  Establishing connection to Admin Server at URL [t3://gcp2cpp084.localhost:19101], attempt #1
+ connecting..
+false
+Connecting to t3://gcp2cpp084.localhost:19101 with userid gopsadmin ...
+Successfully connected to Admin Server "adminserver_kana" that belongs to domain "petkana".
+
+Warning: An insecure protocol was used to connect to the server. 
+To ensure on-the-wire security, the SSL port or Admin port should be used instead.
+
+true
+Starting an edit session for making changes to the Weblogic configuration
+
+Activating all the changes made during the existing edit session
+
+Starting an edit session for making changes to the Weblogic configuration
+
+Activating all the changes made during the existing edit session
+
+Starting an edit session for making changes to the Weblogic configuration
+
+Activating all the changes made during the existing edit session
+
+Starting an edit session for making changes to the Weblogic configuration
+
+Activating all the changes made during the existing edit session
+
+Starting an edit session for making changes to the Weblogic configuration
+
+Activating all the changes made during the existing edit session
+
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh configure_SSL stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/configure_SSL.py
+ false
+Read Domain
+INFO  Establishing connection to Admin Server at URL [t3://gcp2cpp084.localhost:19101], attempt #1
+ connecting..
+false
+Connecting to t3://gcp2cpp084.localhost:19101 with userid gopsadmin ...
+Successfully connected to Admin Server "adminserver_kana" that belongs to domain "petkana".
+
+Warning: An insecure protocol was used to connect to the server. 
+To ensure on-the-wire security, the SSL port or Admin port should be used instead.
+
+true
+Starting an edit session for making changes to the Weblogic configuration
+
+Doing AdminServer Changes....
+Configuring SSL for gcp2cpp084_kana_L1_1
+Configuring SSL for gcp2cpp084_kana_L1_2
+Configuring SSL for gcp2cpp084_kana_L2_1
+Configuring SSL for gcp2cpp084_kana_L2_2
+Configuring SSL for gcp2cpp084_service_kana_L1
+Configuring SSL for gcp2cpp084_sysmgmt_kana_L1
+Activating all the changes made during the existing edit session
+
+Done SSl COnfig...
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  true
+ INFO  Already Connected to Admin Server
+ INFO  Disable HTTP Port for adminserver_kana
+ INFO  Disable HTTP Port for gcp2cpp084_kana_L1_1
+ INFO  Disable HTTP Port for gcp2cpp084_kana_L1_2
+ INFO  Disable HTTP Port for gcp2cpp084_kana_L2_1
+ INFO  Disable HTTP Port for gcp2cpp084_kana_L2_2
+ INFO  Disable HTTP Port for gcp2cpp084_service_kana_L1
+ INFO  Disable HTTP Port for gcp2cpp084_sysmgmt_kana_L1
+ INFO  Enable Secure Replication for cluster-kana-L1
+ INFO  Enable Secure Replication for cluster-kana-L2
+ INFO  Disable insecure protocol for gcp2cpp084_kana_L1_1's Network Channel clusterChannel_kana_L1
+ INFO  Disable insecure protocol for gcp2cpp084_kana_L1_2's Network Channel clusterChannel_kana_L1
+ INFO  Disable insecure protocol for gcp2cpp084_kana_L2_1's Network Channel clusterChannel_kana_L2
+ INFO  Disable insecure protocol for gcp2cpp084_kana_L2_2's Network Channel clusterChannel_kana_L2
+ INFO  Disable insecure protocol for gcp2cpp084_service_kana_L1's Network Channel clusterChannel_kana_L1
+ INFO  Shutting down the Admin Server...
+ Oct 25, 2018 5:15:11 AM weblogic.wsee.WseeCoreMessages logWseeServiceHalting
+INFO: The Wsee Service is halting
+INFO  Modifying WLS Scripts to t3s...
+ INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh admin_args_override stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/admin_args_override.py
+ creating /x/web/gops/oracle/config/aserver/petkana/bin/setUserOverrides.sh
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/mytemp/asingh/wls_paas/platform/wlscli.sh configure_nodemanager_ssl stage kana
+ found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command from jython file: core/commands/configure_nodemanager_ssl.py
+ INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+INFO  The following command will be used: /x/web/gops/oracle/config/mserver/petkana/bin/stopnodemgr.sh
+ <2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <NODEMGR_HOME is already set to /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager>
+<2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <Begin>
+<2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <Adding NodeManagerHome entry to JAVA_OPTIONS: -DNodeManagerHome=/x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager>
+<2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <Setting ROOT_DIRECTORY: /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager>
+<2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <NodeManager process id file not found: /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager/nodemanager.process.id>
+<2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <Scanning for appropriate NodeManager process to shutdown.>
+<2018-10-25 PDT 05:15:51> <Info> <StopNodeManager> <Could not find the correct NodeManager process from this list: website 14978 14936 0 Sep24 ? 00:17:48 /x/bea-wl1213/jdk/bin/java -server -Xms32m -Xmx200m -XX:MaxPermSize=128m -Dweblogic.RootDirectory=/x/bea-wl1213/wlserver/../oracle_common/common/nodemanager -Dcoherence.home=/x/bea-wl1213/wlserver/../coherence -Dbea.home=/x/bea-wl1213/wlserver/.. -Xverify:none -Djava.endorsed.dirs=/x/bea-wl1213/jdk/jre/lib/endorsed:/x/bea-wl1213/wlserver/../oracle_common/modules/endorsed -Djava.security.policy=/x/bea-wl1213/wlserver/server/lib/weblogic.policy -Dweblogic.nodemanager.JavaHome=/x/bea-wl1213/jdk weblogic.NodeManager -v>
+<2018-10-25 PDT 05:15:51> <Error> <StopNodeManager> <Could not locate a NodeManager process id that matched required content of RootDirectory=/x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager>
+Could not append /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager/stopnodemanager.log to /x/web/gops/oracle/product/wl12213/oracle_common/common/nodemanager/nodemanager.log
+INFO  The following command will be used: /x/web/gops/oracle/config/mserver/petkana/bin/startnodemgr.sh
+ + /x/web/gops/oracle/product/jdk1.8.0_171/bin/java -server -Xms32m -Xmx200m -Djdk.tls.ephemeralDHKeySize=2048 -Dcoherence.home=/x/web/gops/oracle/product/wl12213/wlserver/../coherence -Dbea.home=/x/web/gops/oracle/product/wl12213/wlserver/.. -Djava.system.class.loader=com.oracle.classloader.weblogic.LaunchClassLoader -Dweblogic.RootDirectory=/x/web/gops/oracle/config/mserver/petkana -Djava.security.policy=/x/web/gops/oracle/product/wl12213/wlserver/server/lib/weblogic.policy -Dweblogic.nodemanager.JavaHome=/x/web/gops/oracle/product/jdk1.8.0_171 weblogic.NodeManager -v
+INFO  Start the admin server using start script
+ INFO  The following start command will be used: /x/web/gops/oracle/config/aserver/petkana/bin/startadmin.sh
+ [INFO] adminserver_kana startup log: /x/web/gops/oracle/shared/petkana/logs/adminserver_kana/adminserver_kana_10-25-18-05:15:53.log 
+INFO  Just in case wait for 30 seconds.
+ Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ <Oct 25, 2018 12:16:24 PM UTC> <Warning> <JNDI> <BEA-050001> <WLContext.close() was called in a different thread than the one in which it was created.> 
+done
+found setenv.sh
+
+Initializing WebLogic Scripting Tool (WLST) ...
+
+Welcome to WebLogic Server Administration Scripting Shell
+
+Type help() for help on available commands
+
+INFO  ===================================================================================================
+ INFO  wlscli help to see availible commands
+ INFO  ===================================================================================================
+ INFO  Loading configuration from file: config/environments/stage/kana.properties
+ INFO  setenv file verified.
+ INFO  WLST support: True
+ INFO  Running command core/commands/ant/build-generate-scripts.xml as ant target in build file: core/commands/ant/build-generate-scripts.xml
+ 
+populate.setupCron.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/core/commands/ant
+     [echo] creating setupCron.sh script..
+
+populate.disk_monitoring.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring
+     [echo] creating disk_monitoring.sh script..
+
+populate.swap_monitoring.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring
+     [echo] creating swap_monitoring.sh script..
+
+populate.cpu_monitoring.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring
+     [echo] creating cpu_monitoring.sh script..
+
+populate.load_monitoring.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring
+     [echo] creating load_monitoring.sh script..
+
+populate.wlsUnpack.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/core/commands/ant/resources/tmp
+     [echo] creating wlsUnpack.sh script..
+
+populate.wlsPack.sh:
+     [copy] Copying 1 file to /x/mytemp/asingh/wls_paas/platform/core/commands/ant/resources/tmp
+     [echo] creating wlsPack.sh script..
+
+setup_cron:
+     [exec] Configuring cron for /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/pool_monitoring.sh
+     [exec] Configuring cron for /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/disk_monitoring.sh
+     [exec] Configuring cron for /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/swap_monitoring.sh
+     [exec] Configuring cron for /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/load_monitoring.sh
+     [exec] Configuring cron for /x/mytemp/asingh/wls_paas/platform/custom/resources/monitoring/cpu_monitoring.sh
+     [exec] no crontab for website
+INFO  Command completed.
+
+BUILD SUCCESS
+
+ done
+./test.sh: line 11: i#./wlscli.sh: No such file or directory
+./test.sh: line 12: .#/wlscli.sh: No such file or directory

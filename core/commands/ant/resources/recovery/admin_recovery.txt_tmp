@@ -1,0 +1,176 @@
+#!/bin/sh
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+USER="@@OS_USER@@"
+ASERVER_HOME="@@ASERVER_HOME@@"
+MSERVER_HOME="@@MSERVER_HOME@@"
+WLS_VERSION="@@WLS_VERSION@@"
+DOMAIN="@@DOMAIN_NAME@@"
+ADMINSERVER_NAME="@@ADMINSERVER_NAME@@"
+ADMIN_HOST="@@ADMIN_HOST@@"
+#MS_HOST="@@MS_HOST@@"
+NEW_HOST="@@NEW_MS_HOST@@"
+admin_user="@@ADMIN_USER@@"
+admin_pwd="@@ADMIN_PWD@@"
+
+DOMAIN_HOME_S=$ASERVER_HOME
+
+#GET LOCAL DIRECTORY PATH AND REMOTE DIRECTORY PATH
+LOCAL_PATH="$PLATFORM_HOME/custom/resources/recovery"
+REMOTE_PATH="$PLATFORM_HOME/custom/resources"
+
+SCRIPT_PRECHECK="$LOCAL_PATH/preCheck.sh"
+SCRIPT_JDK="$LOCAL_PATH/install_jdk.sh"
+SCRIPT_WLS="$LOCAL_PATH/install_WLS.sh"
+SCRIPT_PATCH="$LOCAL_PATH/applyPatch.sh"
+
+installbase=$(pwd)
+
+# Create environment virables
+installbase=$(pwd)
+ADMIN_SHORT=`echo $ADMIN_HOST | cut -d'.' -f 1`
+ADMIN_UPPER=`echo $ADMIN_SHORT | awk '{print toupper($0)}'`
+ADMIN_IP=`nslookup $ADMIN_HOST | tail -2 | cut -d' ' -f 2 | head -1`
+NEW_SHORT=`echo $NEW_HOST | cut -d'.' -f 1`
+NEW_UPPER=`echo $NEW_SHORT | awk '{print toupper($0)}'`
+NEW_IP=`nslookup $NEW_HOST | tail -2 | cut -d' ' -f 2 | head -1`
+
+function avoid_localhost_change(){
+	if [ "$ADMIN_SHORT" == "$NEW_SHORT" ]; then
+		echo "Aborting execution. $0 must be executed on $NEW_SHORT"
+		exit 9
+	fi
+}
+
+function check_user(){
+	if [[ $USER -ne "$USER" ]]
+	then
+		echo "Not running by $USER"
+		exit
+	fi
+}
+
+# create soft link
+function createLink(){
+	if [ -L /x/web/$ADMIN_UPPER ];then
+		unlink /x/web/$ADMIN_UPPER
+	fi
+	ln -s /x/web/$NEW_UPPER /x/web/$ADMIN_UPPER
+}
+
+function untarFIles(){
+	#untar domain
+	if [ ! -d $DOMAIN_HOME_S ]; then
+		mkdir -p $DOMAIN_HOME_S
+	fi
+	cd $DOMAIN_HOME_S
+	tar -xzvf $LOCAL_PATH/$DOMAIN.tar
+
+}
+
+function configure_admin(){
+	cd $DOMAIN_HOME_S/$DOMAIN
+
+	if [ "$WLS_VERSION" == "wls12130" ]; then
+		echo "No changes required for domain home in .xml and .sh files for $WLS_VERSION"
+	else
+		echo "editing .xml and .sh files from mserver to aserver"
+		###Edit domain *.sh Files
+		for i in `find . -type f -name "*.sh" -exec grep -il mserver {} \;`; do echo "Editing file $i "; sed -i.mserver.bkp 's/oracle\/config\/mserver/oracle\/config\/aserver/g' $i; done
+	 
+		###Edit *.xml Files
+		for i in `find . -type f -name "*.xml" -exec grep -il mserver {} \;`; do echo "Editing file $i "; sed -i.mserver.bkp 's/oracle\/config\/mserver/oracle\/config\/aserver/g' $i; done
+	 
+	fi
+
+	###Change listen address in config.xml to new admin hosts IP and Search for "listen-address" under adminserver Tag in config.xml
+	sed -i.before_admin_recover "0,/<listen-address>/s#<listen-address>[^ ]*</listen-address>#<listen-address>$NEW_IP</listen-address>#" config/config.xml
+	#and replace <listen-address><new admin host IP></listen-address>
+	 
+	###Change *.sh scripts to point new admin hosts. Example below
+	sed -i -e "s/$ADMIN_IP/$NEW_IP/g" -e "s/$ADMIN_HOST/$NEW_IP/g" bin/*.sh
+}
+
+function create_boot_properties(){
+	###Create boot.properties
+	echo "Creating Boot Properties ...."
+	if [ ! -d ${DOMAIN_HOME_S}/$DOMAIN/servers/${ADMINSERVER_NAME}/security ]; then
+		mkdir -p ${DOMAIN_HOME_S}/$DOMAIN/servers/${ADMINSERVER_NAME}/security
+	fi
+	cd ${DOMAIN_HOME_S}/$DOMAIN/servers/${ADMINSERVER_NAME}/security
+	if [ -f boot.properties ]; then
+		rm boot.properties
+	fi
+	touch boot.properties
+	echo "username=$admin_user" > boot.properties
+	echo "password=$admin_pwd" >> boot.properties
+}
+
+function reset_admin_credential(){
+
+	HOSTNAME=`hostname`
+	HOSTNAME_UPPER=`echo $HOSTNAME | awk '{print toupper($0)}'`
+	###If It's a stage box then ...
+	if [[ "$HOSTNAME_UPPER" == *"STAGE"* ]]; then
+		###Reset Adminserver Credentials to boot the Adminserver JVM
+		. $DOMAIN_HOME_S/$DOMAIN/bin/setDomainEnv.sh
+		cd $	DOMAIN_HOME_S/$DOMAIN/security
+		java weblogic.security.utils.AdminAccount $admin_user $admin_pwd .
+	fi
+}
+
+# Start adminserver
+function start_adminserver(){
+	#echo "Restart Adminserver $DOMAIN"
+	cd $DOMAIN_HOME_S/${DOMAIN}/bin
+	pid_count=`ps -ef | grep "$ADMINSERVER_NAME" | grep -v grep | wc -l`
+	if [ "$pid_count" == 1 ]; then
+		echo "Restarting $DOMAIN.."
+		$DOMAIN_HOME_S/${DOMAIN}/bin/stopWebLogic.sh
+		$DOMAIN_HOME_S/${DOMAIN}/bin/startadmin.sh
+	else
+		echo "Starting $DOMAIN.."
+		$DOMAIN_HOME_S/${DOMAIN}/bin/startadmin.sh
+	fi
+	echo "admin_recovery script finished"
+}
+
+chmod +x $LOCAL_PATH/*.sh
+
+avoid_localhost_change
+
+##pre-requisite checks
+sh $SCRIPT_PRECHECK
+if [ "$?" -ne "0" ]; then
+	echo "WLS Installation pre-requisite Failed, please run $SCRIPT_PRECHECK script Manually with root. Aborting .."
+	exit 
+fi
+
+check_user
+
+#Install JDK
+sh $SCRIPT_JDK
+if [ "$?" -ne "0" ]; then
+	echo "JDK Installation Failed, please run installation script Manually. Aborting .."
+	exit 
+fi
+
+#Install WLS
+sh $SCRIPT_WLS
+if [ "$?" -ne "0" ]; then
+	echo "WLS Installation Failed, please run installation script Manually. Aborting .."
+	exit 
+fi
+
+#Apply Patch
+sh $SCRIPT_PATCH
+if [ "$?" -ne "0" ]; then
+	echo "WLS Patching Failed, please run patching script Manually. Aborting .." 
+fi
+
+createLink
+untarFIles
+configure_admin
+reset_admin_credential
+create_boot_properties
+#start_adminserver

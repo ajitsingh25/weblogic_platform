@@ -1,0 +1,220 @@
+#!/bin/sh
+
+PLATFORM_HOME="@@CONFIG_HOME@@"
+USER="@@OS_USER@@"
+ASERVER_HOME="@@ASERVER_HOME@@"
+MSERVER_HOME="@@MSERVER_HOME@@"
+WLS_VERSION="@@WLS_VERSION@@"
+DOMAIN="@@DOMAIN_NAME@@"
+NM_HOME="@@NM_HOME@@"
+ADMIN_HOST="@@ADMIN_HOST@@"
+OLD_HOST="@@OLD_MS_HOST@@"
+OLD_IP="@@OLD_MS_IP@@"
+NEW_HOST="@@NEW_MS_HOST@@"
+PEGA_TOP="@@PEGA_TOP@@"
+
+if [ "$WLS_VERSION" == "wls12130" ]; then
+	DOMAIN_HOME=$ASERVER_HOME
+else
+	DOMAIN_HOME=$MSERVER_HOME
+fi
+#GET LOCAL DIRECTORY PATH AND REMOTE DIRECTORY PATH
+LOCAL_PATH="$PLATFORM_HOME/custom/resources/recovery"
+REMOTE_PATH="$PLATFORM_HOME/custom/resources"
+
+SCRIPT_PRECHECK="$LOCAL_PATH/preCheck.sh"
+SCRIPT_JDK="$LOCAL_PATH/install_jdk.sh"
+SCRIPT_WLS="$LOCAL_PATH/install_WLS.sh"
+SCRIPT_PATCH="$LOCAL_PATH/applyPatch.sh"
+
+installbase=$(pwd)
+
+# Create environment virables
+installbase=$(pwd)
+ADMIN_SHORT=`echo $ADMIN_HOST | cut -d'.' -f 1`
+ADMIN_UPPER=`echo $ADMIN_SHORT | awk '{print toupper($0)}'`
+ADMIN_IP=`nslookup $ADMIN_HOST | tail -2 | cut -d' ' -f 2 | head -1`
+OLD_SHORT=`echo $OLD_HOST | cut -d'.' -f 1`
+OLD_UPPER=`echo $OLD_SHORT | awk '{print toupper($0)}'`
+NEW_SHORT=`echo $NEW_HOST | cut -d'.' -f 1`
+NEW_UPPER=`echo $NEW_SHORT | awk '{print toupper($0)}'`
+NEW_IP=`nslookup $NEW_HOST | tail -2 | cut -d' ' -f 2 | head -1`
+
+function avoid_localhost_change(){
+	if [ "$ADMIN_SHORT" == "$NEW_SHORT" ]; then
+		echo "Aborting execution. $0 must be executed on $NEW_SHORT"
+		exit 9
+	fi
+}
+
+function check_user(){
+	if [[ $USER -ne "$USER" ]]
+	then
+		echo "Not running by $USER"
+		exit
+	fi
+}
+
+# create soft link
+function createLink(){
+	if [ -L /x/web/$ADMIN_UPPER ];then
+		unlink /x/web/$ADMIN_UPPER
+	fi
+	ln -s /x/web/$NEW_UPPER /x/web/$ADMIN_UPPER
+}
+
+function untarFIles(){
+	#untar domain
+	cd $DOMAIN_HOME
+	tar -xzvf $LOCAL_PATH/$DOMAIN.tar
+
+	#untar nodemanager
+	cd $NM_HOME/..
+	tar -xzvf $LOCAL_PATH/nodemanager.tar
+}
+
+# configure nodemanager and other ms files
+function configure_ms_host(){
+	cd $NM_HOME/..
+	if [ -f nodemanager.log ]; then
+		rm -f nodemanager.log
+	fi
+	# update IP in nodemanager.properties
+	# Sometimes ListenAddress is null, so set to new ip directly
+	if [ -f $NM_HOME/nodemanager.properties ]; then
+			sed -i "s/ListenAddress=.*/ListenAddress=$NEW_IP/g" $NM_HOME/nodemanager.properties
+	fi
+	rm -rf *.lck
+	if ! grep -q "DOMAIN=$DOMAIN_HOME/$DOMAIN" $NM_HOME/nodemanager.domains; then
+			echo "DOMAIN=$DOMAIN_HOME/$DOMAIN" >> $NM_HOME/nodemanager.domains
+	fi
+
+
+	# delete old servers' name
+	if [ -d $DOMAIN_HOME/$DOMAIN/servers ];then
+		cd $DOMAIN_HOME/$DOMAIN/servers
+		rm -rf domain_bak ${ADMIN_SHORT}_*
+	fi
+
+	# update another nodemanager.properties
+	# Sometimes ListenAddress is localhost, so set to new ip directly
+	if [ -d $DOMAIN_HOME/$DOMAIN/nodemanager ]; then
+		cd $DOMAIN_HOME/$DOMAIN/nodemanager
+		if [ -f $NM_HOME/nodemanager.properties ]; then
+				sed -i "s/ListenAddress=.*/ListenAddress=$NEW_IP/g" $NM_HOME/nodemanager.properties
+		fi
+	fi
+
+	if [ -d $DOMAIN_HOME/$DOMAIN/config/jms ];then
+		cd $DOMAIN_HOME/$DOMAIN/config/jms
+		#sed -i "s/_${OLD_NUM}_/_${NEW_NUM}_/g" prjms_module_APP_l2-jms.xml prjms_module_APP_l1-jms.xml
+		sed -i "s/_${OLD_NUM}_/_${NEW_NUM}_/g" *.xml
+	fi
+}
+
+
+# create a whitespace seperated list of JVM names
+function configure_pega_configs(){
+	JVMS=`cat $DOMAIN_HOME/${DOMAIN}/config/config.xml | grep name | grep ${NEW_SHORT}_ |  grep -v migratable | cut -d ">" -f2 | cut -d "<" -f1  | grep -v / | sort | uniq`
+	for jvm in $(echo ${JVMS})
+	do
+		echo "$jvm"
+	done
+
+	# Create log folders
+	mkdir -p $PEGA_TOP/$DOMAIN/logs
+	for jvm in $(echo ${JVMS})
+	do
+		mkdir -p $PEGA_TOP/$DOMAIN/logs/$jvm
+	done
+
+	# Create temp folders
+	if [ "$DOMAIN" != "gems" ]; then
+		mkdir -p $PEGA_TOP/$DOMAIN/${DOMAIN}temp
+		for jvm in $(echo ${JVMS})
+		do
+			mkdir -p $PEGA_TOP/$DOMAIN/${DOMAIN}temp/$jvm
+		done
+	fi
+
+	mkdir -p $PEGA_TOP/$DOMAIN/${DOMAIN}config
+	for jvm in $(echo ${JVMS})
+	do
+			mkdir -p $PEGA_TOP/$DOMAIN/${DOMAIN}config/$jvm
+	done
+
+	for jvm in $(echo ${JVMS})
+	do
+		cd $PEGA_TOP/$DOMAIN/${DOMAIN}config/$jvm
+		tar -xzvf $LOCAL_PATH/prconfig.tar
+		if [ -f logging.properties ];then
+			sed -i "s/managedserver/$jvm/g" logging.properties
+		fi
+		if [ -f prlogging.xml ];then
+			sed -i "s/managedserver/$jvm/g" prlogging.xml
+		fi
+		if [ -f log4j2.properties ];then
+				sed -i "s/managedserver/$jvm/g" log4j2.properties
+		fi
+	done
+}
+
+
+function start_nm(){
+	pid_count=`ps -ef | grep weblogic.NodeManager | grep -v grep | wc -l`
+	if [ "$pid_count" == 1 ]; then
+		echo "Killiing Node Manager PID"
+		pid=`ps -ef | grep weblogic.NodeManager | grep -v grep | awk '{print $2}'`
+		kill $pid
+		echo "Starting Node Manager "
+		cd $DOMAIN_HOME/$DOMAIN/bin
+		./startnodemgr.sh
+	else
+		echo "Starting Node Manager "
+		cd $DOMAIN_HOME/$DOMAIN/bin
+		./startnodemgr.sh
+	fi
+
+}
+
+
+chmod +x $LOCAL_PATH/*.sh
+
+avoid_localhost_change
+
+##pre-requisite checks
+sh $SCRIPT_PRECHECK
+if [ "$?" -ne "0" ]; then
+	echo "WLS Installation pre-requisite Failed, please run $SCRIPT_PRECHECK script Manually with root. Aborting .."
+	exit 
+fi
+
+check_user
+
+#Install JDK
+sh $SCRIPT_JDK
+if [ "$?" -ne "0" ]; then
+	echo "JDK Installation Failed, please run installation script Manually. Aborting .."
+	exit 
+fi
+
+#Install WLS
+sh $SCRIPT_WLS
+if [ "$?" -ne "0" ]; then
+	echo "WLS Installation Failed, please run installation script Manually. Aborting .."
+	exit 
+fi
+
+#Apply Patch
+sh $SCRIPT_PATCH
+if [ "$?" -ne "0" ]; then
+	echo "WLS Patching Failed, please run patching script Manually. Aborting .." 
+fi
+
+createLink
+untarFIles
+configure_ms_host
+if [ "$DOMAIN" != "okm" -a "$DOMAIN" != "gems" ]; then
+	configure_pega_configs
+fi
+start_nm

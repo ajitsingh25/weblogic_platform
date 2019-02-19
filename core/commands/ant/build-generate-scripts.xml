@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Generate-Dynamic-Scripts">
+    <import file="ant-imports.xml"/>
+
+        <target name="populate.startadmin.sh">
+                <condition property="startadmin.script">
+                <and>
+                        <isset property="wls.domain.name"/>
+                        <isset property="wls.domain.dir"/>
+                        <isset property="wls.admin.name"/>
+                        <isset property="wls.shared.domain.dir"/>
+                </and>
+                </condition>
+                <mkdir dir="tmp" />
+                <!-- Weblogic 12c changes ... Need to verify version here ... TODO -->
+
+                <property name="startadmin.sh" value="${wls.domain.dir}/${wls.domain.name}/bin/startadmin.sh" />
+                <fail unless="startadmin.script">Could not populate "startadmin.sh" file - wls.domain.name and wls.admin.name properties must be set.</fail>
+                <copy file="resources/startadmin_temp.sh" tofile="${startadmin.sh}" overwrite="true" />
+                <echo message="creating startadmin.sh script.."/>
+                <replace file="${startadmin.sh}">
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+			<replacefilter token="@@DOMAIN_HOME@@" value="${wls.domain.dir}"/>
+                        <replacefilter token="@@ADMINSERVER_NAME@@" value="${wls.admin.name}"/>
+                        <replacefilter token="@@SHARED_DIR@@" value="${wls.shared.domain.dir}"/>
+                </replace>
+		<chmod file="${startadmin.sh}" perm="750"/>
+        </target>
+
+
+        <target name="populate.startnm.sh">
+                <condition property="startnm.script">
+                <and>
+                        <isset property="wls.domain.name"/>
+                        <isset property="wls.oracle.home"/>
+                        <isset property="wls.name"/>
+                        <isset property="wls.shared.domain.dir"/>
+                </and>
+                </condition>
+                <mkdir dir="tmp" />
+
+                <property name="startnm.sh" value="${wls.domain.dir}/${wls.domain.name}/bin/startnodemgr.sh" />
+                <fail unless="startnm.script">Could not populate "startnodemgr.sh" file - wls.domain.name and wls.oracle.name properties must be set.</fail>
+                <copy file="resources/startnodemgr_tmp.sh" tofile="${startnm.sh}" overwrite="true" />
+                <echo message="creating startnodemgr.sh script.."/>
+                <replace file="${startnm.sh}">
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+                        <replacefilter token="@@WLS_NAME@@" value="${wls.name}"/>
+                        <replacefilter token="@@SHARED_DIR@@" value="${wls.shared.domain.dir}"/>
+			<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+			<replacefilter token="@@MS_DOMAIN_HOME@@" value="${wls.mserver.domain.dir}"/>
+			<replacefilter token="@@AS_DOMAIN_HOME@@" value="${wls.domain.dir}"/>
+			<replacefilter token="@@WLS_VERSION@@" value="${wls.version}"/>
+			<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+                </replace>
+                <chmod file="${startnm.sh}" perm="750"/>
+        </target>
+		
+		<target name="populate.stopnm.sh">
+                <condition property="stopnm.script">
+                <and>
+                        <isset property="wls.domain.name"/>
+                        <isset property="wls.oracle.home"/>
+                        <isset property="wls.name"/>
+                        <isset property="wls.shared.domain.dir"/>
+                </and>
+                </condition>
+                <mkdir dir="tmp" />
+
+                <property name="stopnm.sh" value="${wls.domain.dir}/${wls.domain.name}/bin/stopnodemgr.sh" />
+                <fail unless="stopnm.script">Could not populate "stopnodemgr.sh" file - wls.domain.name and wls.oracle.name properties must be set.</fail>
+                <copy file="resources/stopnodemgr_tmp.sh" tofile="${stopnm.sh}" overwrite="true" />
+                <echo message="creating stopnodemgr.sh script.."/>
+                <replace file="${stopnm.sh}">
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+                        <replacefilter token="@@WLS_NAME@@" value="${wls.name}"/>
+                        <replacefilter token="@@SHARED_DIR@@" value="${wls.shared.domain.dir}"/>
+			<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+			<replacefilter token="@@MS_DOMAIN_HOME@@" value="${wls.mserver.domain.dir}"/>
+			<replacefilter token="@@AS_DOMAIN_HOME@@" value="${wls.domain.dir}"/>
+			<replacefilter token="@@WLS_VERSION@@" value="${wls.version}"/>
+			<replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+                </replace>
+                <chmod file="${stopnm.sh}" perm="750"/>
+        </target>
+
+	<target name="populate.changeJDK.sh">
+                <condition property="changeJDK.script">
+                <and>
+                        <isset property="wls.domain.name"/>
+                        <isset property="wls.domain.dir"/>
+			<isset property="wls.mserver.domain.dir"/>
+			<isset property="wls.domain.javahome"/>
+                </and>
+                </condition>
+                <mkdir dir="tmp" />
+                <!-- Weblogic 12c changes ... Need to verify version here ... TODO -->
+
+                <property name="changeJDK.sh" value="resources/changeJDKHome.sh" />
+                <fail unless="changeJDK.script">Could not populate "changeJDKHome.sh" file - wls.domain.name and wls.mserver.domain.dir properties must be set.</fail>
+                <copy file="resources/changeJDKHome.sh_temp" tofile="${changeJDK.sh}" overwrite="true" />
+                <echo message="creating changeJDKHome.sh script.."/>
+                <replace file="${changeJDK.sh}">
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+                        <replacefilter token="@@DOMAIN_HOME@@" value="${wls.domain.dir}"/>
+                        <replacefilter token="@@MS_DOMAIN_HOME@@" value="${wls.mserver.domain.dir}"/>
+                        <replacefilter token="@@JAVA_HOME@@" value="${wls.domain.javahome}"/>
+                </replace>
+                <chmod file="${changeJDK.sh}" perm="750"/>
+        </target>
+		
+	<target name="populate.cache.sh">
+                <condition property="cache.script">
+                <and>
+                        <isset property="wls.domain.name"/>
+                        <isset property="wls.domain.dir"/>
+						<isset property="wls.mserver.domain.dir"/>
+						<isset property="wls.domain.javahome"/>
+                </and>
+                </condition>
+                                
+                <property name="cache.sh" value="${wls.domain.dir}/${wls.domain.name}/bin/cache.sh" />
+                <fail unless="cache.script">Could not populate "cache.sh" file - wls.domain.name and wls.mserver.domain.dir properties must be set.</fail>
+                <copy file="resources/cache.sh_tmp" tofile="${cache.sh}" overwrite="true" />
+                <echo message="creating cache.sh script.."/>
+                <replace file="${cache.sh}">
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+                        <replacefilter token="@@DOMAIN_HOME@@" value="${wls.domain.dir}"/>
+                        <replacefilter token="@@MS_DOMAIN_HOME@@" value="${wls.mserver.domain.dir}"/>
+                        <replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+                </replace>
+                <chmod file="${cache.sh}" perm="750"/>
+        </target>
+		
+        <target name="populate.preCheck.sh">
+                <condition property="preCheck.script">
+                <and>
+                        <isset property="wls.install.group"/>
+						<isset property="wls.install.user"/>
+                        <isset property="wls.oracle.top"/>
+                        <isset property="wls.pega.top"/>
+                        <isset property="wls.install.umask"/>
+                </and>
+                </condition>
+				<mkdir dir="tmp" />
+                
+                <property name="preCheck.sh" value="tmp/preCheck.sh" />
+                <fail unless="preCheck.script">Could not populate "preCheck.sh" file - wls.install.group,wls.install.user and wls.oracle.top properties must be set.</fail>
+                <copy file="resources/preCheck_tmp.sh" tofile="${preCheck.sh}" overwrite="true" />
+                <echo message="creating preCheck.sh script.."/>
+                <replace file="${preCheck.sh}">
+						<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@GROUP@@" value="${wls.install.group}"/>
+                        <replacefilter token="@@USER@@" value="${wls.install.user}"/>
+                        <replacefilter token="@@ORACLE_BASE@@" value="${wls.oracle.top}"/>
+						<replacefilter token="@@PEGACONFIG_BASE@@" value="${wls.pega.top}"/>
+						<replacefilter token="@@UMASK@@" value="${wls.install.umask}"/>
+                </replace>
+                <chmod file="${preCheck.sh}" perm="750"/>
+        </target>
+		<target name="setup_cron" depends="populate.setupCron.sh,populate.disk_monitoring.sh,populate.swap_monitoring.sh,populate.cpu_monitoring.sh,populate.load_monitoring.sh,populate.wlsUnpack.sh,populate.wlsPack.sh" >
+			<property name="cron.script" value="setupCron.sh" />
+			<exec executable="/bin/sh" failonerror="true">
+				<arg line="${cron.script}"/>
+			</exec>
+		</target>
+		<target name="populate.setupCron.sh">
+				<condition property="setupCron.script">
+				<and>
+						<isset property="ConfigNOW.home"/>
+				</and>
+				</condition>
+				
+				<property name="setupCron.sh" value="${ConfigNOW.home}/core/commands/ant/setupCron.sh" />
+				<fail unless="setupCron.script">Could not populate "setupCron.sh" file - ConfigNOW.home property must be set.</fail>
+				<copy file="resources/setupCron.txt_tmp" tofile="${setupCron.sh}" overwrite="true" />
+				<echo message="creating setupCron.sh script.."/>
+				<replace file="${setupCron.sh}">
+						<replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+				</replace>
+				<chmod file="${setupCron.sh}" perm="750"/>
+		</target>
+        <target name="populate.pool_monitoring.sh">
+                <condition property="pool_monitoring.script">
+                <and>
+                        <isset property="wls.domain.owner.email"/>
+						<isset property="ConfigNOW.home"/>
+                </and>
+                </condition>
+                
+                <property name="pool_monitoring.sh" value="${ConfigNOW.home}/custom/resources/monitoring/pool_monitoring.sh" />
+                <fail unless="pool_monitoring.script">Could not populate "pool_monitoring.sh" file - wls.domain.owner.email property must be set.</fail>
+                <copy file="resources/monitoring/pool_monitoring.txt_tmp" tofile="${pool_monitoring.sh}" overwrite="true" />
+                <echo message="creating pool_monitoring.sh script.."/>
+                <replace file="${pool_monitoring.sh}">
+                        <replacefilter token="@@OWNERS_EMAIL_ID@@" value="${wls.domain.owner.email}"/>
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                </replace>
+                <chmod file="${pool_monitoring.sh}" perm="750"/>
+        </target>
+        <target name="populate.disk_monitoring.sh">
+                <condition property="disk_monitoring.script">
+                <and>
+                        <isset property="wls.domain.owner.email"/>
+						<isset property="ConfigNOW.home"/>
+						<isset property="wls.monitoring.disk_monitoring.threshold.warning"/>
+                </and>
+                </condition>
+                
+                <property name="disk_monitoring.sh" value="${ConfigNOW.home}/custom/resources/monitoring/disk_monitoring.sh" />
+                <fail unless="disk_monitoring.script">Could not populate "disk_monitoring.sh" file - wls.domain.owner.email property must be set.</fail>
+                <copy file="resources/monitoring/disk_monitoring.txt_tmp" tofile="${disk_monitoring.sh}" overwrite="true" />
+                <echo message="creating disk_monitoring.sh script.."/>
+                <replace file="${disk_monitoring.sh}">
+                        <replacefilter token="@@ALERT_MAIL@@" value="${wls.domain.owner.email}"/>
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@WARNING_THRESHOLD@@" value="${wls.monitoring.disk_monitoring.threshold.warning}"/>
+                        <replacefilter token="@@DOMAIN_TOP@@" value="${wls.domain.dir}"/>
+                        <replacefilter token="@@PEGA_TOP@@" value="${wls.pega.log.dir}"/>
+                </replace>
+                <chmod file="${disk_monitoring.sh}" perm="750"/>
+        </target>
+        <target name="populate.swap_monitoring.sh">
+                <condition property="swap_monitoring.script">
+                <and>
+                        <isset property="wls.domain.owner.email"/>
+						<isset property="ConfigNOW.home"/>
+						<isset property="wls.monitoring.swap_monitoring.threshold.warning"/>
+                </and>
+                </condition>
+                
+                <property name="swap_monitoring.sh" value="${ConfigNOW.home}/custom/resources/monitoring/swap_monitoring.sh" />
+                <fail unless="swap_monitoring.script">Could not populate "swap_monitoring.sh" file - wls.domain.owner.email property must be set.</fail>
+                <copy file="resources/monitoring/swap_monitoring.txt_tmp" tofile="${swap_monitoring.sh}" overwrite="true" />
+                <echo message="creating swap_monitoring.sh script.."/>
+                <replace file="${swap_monitoring.sh}">
+                        <replacefilter token="@@ALERT_MAIL@@" value="${wls.domain.owner.email}"/>
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@WARNING_THRESHOLD@@" value="${wls.monitoring.swap_monitoring.threshold.warning}"/>
+                </replace>
+                <chmod file="${swap_monitoring.sh}" perm="750"/>
+        </target>
+        <target name="populate.cpu_monitoring.sh">
+                <condition property="cpu_monitoring.script">
+                <and>
+                        <isset property="wls.domain.owner.email"/>
+						<isset property="ConfigNOW.home"/>
+						<isset property="wls.monitoring.cpu_monitoring.threshold.warning"/>
+						<isset property="wls.monitoring.cpu_monitoring.threshold.critical"/>
+                </and>
+                </condition>
+                
+                <property name="cpu_monitoring.sh" value="${ConfigNOW.home}/custom/resources/monitoring/cpu_monitoring.sh" />
+                <fail unless="cpu_monitoring.script">Could not populate "cpu_monitoring.sh" file - wls.domain.owner.email property must be set.</fail>
+                <copy file="resources/monitoring/cpu_monitoring.txt_tmp" tofile="${cpu_monitoring.sh}" overwrite="true" />
+                <echo message="creating cpu_monitoring.sh script.."/>
+                <replace file="${cpu_monitoring.sh}">
+                        <replacefilter token="@@ALERT_MAIL@@" value="${wls.domain.owner.email}"/>
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@WARNING_THRESHOLD@@" value="${wls.monitoring.cpu_monitoring.threshold.warning}"/>
+						<replacefilter token="@@CRIT_THRESHOLD@@" value="${wls.monitoring.cpu_monitoring.threshold.critical}"/>
+                </replace>
+                <chmod file="${cpu_monitoring.sh}" perm="750"/>
+        </target>
+        <target name="populate.load_monitoring.sh">
+                <condition property="load_monitoring.script">
+                <and>
+                        <isset property="wls.domain.owner.email"/>
+						<isset property="ConfigNOW.home"/>
+						<isset property="wls.monitoring.load_monitoring.threshold.warning"/>
+                </and>
+                </condition>
+                
+                <property name="load_monitoring.sh" value="${ConfigNOW.home}/custom/resources/monitoring/load_monitoring.sh" />
+                <fail unless="load_monitoring.script">Could not populate "load_monitoring.sh" file - wls.domain.owner.email property must be set.</fail>
+                <copy file="resources/monitoring/load_monitoring.txt_tmp" tofile="${load_monitoring.sh}" overwrite="true" />
+                <echo message="creating load_monitoring.sh script.."/>
+                <replace file="${load_monitoring.sh}">
+                        <replacefilter token="@@ALERT_MAIL@@" value="${wls.domain.owner.email}"/>
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@WARNING_THRESHOLD@@" value="${wls.monitoring.load_monitoring.threshold.warning}"/>
+                </replace>
+                <chmod file="${load_monitoring.sh}" perm="750"/>
+        </target>
+        <target name="populate.wlsPack.sh">
+                <condition property="wlsPack.script">
+                <and>
+						<isset property="ConfigNOW.home"/>
+						<isset property="wls.domain.name"/>
+						<isset property="wls.domain.dir"/>
+						<isset property="wls.oracle.home"/>
+                </and>
+                </condition>
+                <property name="wlsPack.sh" value="${ConfigNOW.home}/core/commands/ant/resources/tmp/wlsPack.sh" />
+                <fail unless="wlsPack.script">Could not populate "wlsPack.sh" file - wls.domain.name, wls.domain.dir, wls.oracle.home property must be set.</fail>
+                <copy file="resources/wlsPack.txt_tmp" tofile="${wlsPack.sh}" overwrite="true" />
+                <echo message="creating wlsPack.sh script.."/>
+                <replace file="${wlsPack.sh}">
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+                        <replacefilter token="@@DOMAIN_HOME@@" value="${wls.domain.dir}"/>
+						<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+                </replace>
+                <chmod file="${wlsPack.sh}" perm="750"/>
+        </target>
+        <target name="populate.wlsUnpack.sh">
+                <condition property="wlsUnpack.script">
+                <and>
+						<isset property="ConfigNOW.home"/>
+						<isset property="wls.domain.name"/>
+						<isset property="wls.mserver.domain.dir"/>
+						<isset property="wls.oracle.home"/>
+                </and>
+                </condition>
+                <property name="wlsUnpack.sh" value="${ConfigNOW.home}/core/commands/ant/resources/tmp/wlsUnpack.sh" />
+                <fail unless="wlsUnpack.script">Could not populate "wlsUnpack.sh" file - wls.domain.name, wls.domain.dir, wls.oracle.home property must be set.</fail>
+                <copy file="resources/wlsUnpack.txt_tmp" tofile="${wlsUnpack.sh}" overwrite="true" />
+                <echo message="creating wlsUnpack.sh script.."/>
+                <replace file="${wlsUnpack.sh}">
+                        <replacefilter token="@@CONFIG_HOME@@" value="${ConfigNOW.home}"/>
+                        <replacefilter token="@@DOMAIN_NAME@@" value="${wls.domain.name}"/>
+                        <replacefilter token="@@MSERVER_DOMAIN_HOME@@" value="${wls.mserver.domain.dir}"/>
+						<replacefilter token="@@ORACLE_HOME@@" value="${wls.oracle.home}"/>
+                </replace>
+                <chmod file="${wlsUnpack.sh}" perm="750"/>
+        </target>
+</project>

@@ -1,0 +1,53 @@
+<project name="Apply patch">
+	<import file="ant-imports.xml"/>
+	<target name="patch_apply" depends="validate.patch.config" description="Apply WLS Patch using Opatch">
+		<property name="patch.script" value="applyPatch.sh" />
+		<exec executable="/bin/sh" failonerror="true">
+			<arg line="${patch.script}"/>
+			<arg line="${ConfigNOW.home}"/>
+			<arg line="${opatch.patchZipName}"/>
+			<arg line="${wls.oracle.home}"/>
+			<arg line="${wls.domain.javahome}"/>
+			<arg line="${opatch.quarter}"/>
+			<arg line="${opatch.patchesdir}"/>
+		</exec>
+	</target>	
+	
+	<target name="patch_inventory" depends="" description="Check all patches applied to this instance">
+		<echo message="Fetching Oracle Patch using oPatch "/>
+		<antcall target="generic.opatch.run">
+			<param name="opatch.command" value="lsinventory"/>
+		</antcall>
+		<echo message="================================================"/>
+		<echo message="oPatch lsinventory completed"/>
+		<echo message="================================================"/>
+	</target>
+
+	<target name="generic.opatch.run">
+		<echo message="Please be patient the oPatch tools may take several minutes to run."/>		
+		<property name="opatch.file" value="${wls.oracle.home}/OPatch/opatch" />
+		<exec executable="sh" failonerror="true">
+			<arg line="${opatch.file} ${opatch.command}" />
+			<env key="ORACLE_HOME" value="${wls.oracle.home}"/>
+		</exec>                
+    	</target>
+
+	<target name="validate.patch.config">
+		<echo message="WebLogic Java Install Home: ${wls.domain.javainstall.home}"/>
+		<echo message="WebLogic Java Home: ${wls.domain.javahome}"/>
+		<echo message="WebLogic Patch Install File: ${opatch.patchZipName}"/>
+		<if>
+			<not>
+				<and>
+					<isset property="wls.domain.javainstall.home" />
+					<isset property="wls.domain.javahome" />
+					<isset property="opatch.patchZipName" />
+				</and>
+			</not>
+			<then>
+				<fail message="Required configuration properties for JDK are missing."/>
+			</then>
+		</if>
+	</target>
+	
+</project>

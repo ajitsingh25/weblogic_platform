@@ -1,0 +1,42 @@
+#!/usr/bin/expect
+
+set prompt "$ "
+set user [lindex $argv 0]
+set password [lindex $argv 1]
+set hostname [lindex $argv 2]
+set timeout 5
+set cmd [lindex $argv 3]
+
+spawn ssh "$user\@$hostname" $cmd
+
+expect {
+        "*assword*" {
+                if {$password == ""} {
+                        interact -o "\r" return
+                        exp_continue
+                } else {
+                        send -- $password
+                        send -- "\n"
+                }
+                exp_continue
+        }
+        "*assphrase*" {
+                if {$password == ""} {
+                        interact -o "\r" return
+                        exp_continue
+                } else {
+                        send -- $password
+                        send -- "\n"
+                }
+                exp_continue
+        }
+        "*yes/no*" {
+                send "yes\n"
+                exp_continue
+        }
+        "*ermission denied*" {
+                exit 0
+        }
+}
+
+
